@@ -1,35 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = 'deep-space' | 'stardust-warmth';
+type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
-  isWarmTheme: boolean;
+  isLightTheme: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('deep-space');
+  const [theme, setTheme] = useState<Theme>('dark');
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'deep-space' ? 'stardust-warmth' : 'deep-space');
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'stardust-warmth') {
-      root.classList.add('theme-warm');
+    if (theme === 'light') {
+      root.classList.add('light');
     } else {
-      root.classList.remove('theme-warm');
+      root.classList.remove('light');
     }
   }, [theme]);
 
-  const isWarmTheme = theme === 'stardust-warmth';
+  const isLightTheme = theme === 'light';
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isWarmTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isLightTheme }}>
       {children}
     </ThemeContext.Provider>
   );

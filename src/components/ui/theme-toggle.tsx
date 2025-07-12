@@ -4,7 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 
 export const ThemeToggle = ({ className }: { className?: string }) => {
-  const { isWarmTheme, toggleTheme } = useTheme();
+  const { isLightTheme, toggleTheme } = useTheme();
 
   return (
     <Button
@@ -16,7 +16,7 @@ export const ThemeToggle = ({ className }: { className?: string }) => {
         className
       )}
     >
-      {isWarmTheme ? (
+      {isLightTheme ? (
         <Moon className="h-5 w-5" />
       ) : (
         <Sun className="h-5 w-5" />

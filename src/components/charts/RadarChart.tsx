@@ -14,7 +14,7 @@ interface RadarChartProps {
 }
 
 export const RadarChart = ({ data, className, size = 200 }: RadarChartProps) => {
-  const { isWarmTheme } = useTheme();
+  const { isLightTheme } = useTheme();
   
   const center = size / 2;
   const radius = size * 0.35;
@@ -88,7 +88,7 @@ export const RadarChart = ({ data, className, size = 200 }: RadarChartProps) => 
       <g>
         <polygon
           points={points}
-          fill={isWarmTheme ? "hsl(var(--primary) / 0.2)" : "hsl(var(--primary) / 0.15)"}
+          fill={isLightTheme ? "hsl(var(--primary) / 0.2)" : "hsl(var(--primary) / 0.15)"}
           stroke="hsl(var(--primary))"
           strokeWidth="2"
           className="transition-prism"
