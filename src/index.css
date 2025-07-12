@@ -8,89 +8,81 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* 深空棱镜主题 (Deep Space Prism) - 默认主题 */
+    --background: 219 39% 5%; /* #0A0E14 近黑深空蓝 */
+    --foreground: 0 0% 88%; /* #E0E0E0 柔和象牙白 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 219 39% 8%;
+    --card-foreground: 0 0% 88%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 219 39% 8%;
+    --popover-foreground: 0 0% 88%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 151 100% 52%; /* #0AFFA4 活力电子绿 */
+    --primary-foreground: 219 39% 5%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 258 46% 55%; /* #7E57C2 神秘霓虹紫 */
+    --secondary-foreground: 0 0% 88%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 219 39% 12%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 151 100% 52%;
+    --accent-foreground: 219 39% 5%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 88%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 219 39% 15%;
+    --input: 219 39% 12%;
+    --ring: 151 100% 52%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* 自定义设计系统变量 */
+    --prism-glow: 151 100% 52%; /* 主色辉光 */
+    --prism-glow-secondary: 258 46% 55%; /* 次要辉光 */
+    --prism-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    
+    /* 动效变量 */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* 字体系统 */
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --font-sans: 'Inter', 'Helvetica Neue', sans-serif;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  /* 星尘暖光主题 (Stardust Warmth) */
+  .theme-warm {
+    --background: 225 15% 12%; /* #1E202A 温暖深灰蓝 */
+    --foreground: 0 0% 96%; /* #F5F5F5 更明亮的白色 */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 225 15% 15%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 225 15% 15%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 45 100% 51%; /* #FFC107 明亮琥珀黄 */
+    --primary-foreground: 225 15% 12%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 199 89% 64%; /* #4FC3F7 柔和天空蓝 */
+    --secondary-foreground: 225 15% 12%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 225 15% 18%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 100% 51%;
+    --accent-foreground: 225 15% 12%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --border: 225 15% 20%;
+    --input: 225 15% 18%;
+    --ring: 45 100% 51%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --prism-glow: 45 100% 51%;
+    --prism-glow-secondary: 199 89% 64%;
   }
 }
 
@@ -100,6 +92,200 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    background-image: var(--prism-noise);
+    transition: var(--transition-smooth);
   }
+}
+
+@layer components {
+  /* 棱镜辉光效果 */
+  .prism-glow {
+    box-shadow: 0 0 20px hsl(var(--prism-glow) / 0.3), 
+                0 0 40px hsl(var(--prism-glow) / 0.1),
+                inset 0 1px 0 hsl(var(--prism-glow) / 0.2);
+    transition: var(--transition-smooth);
+  }
+
+  .prism-glow:hover {
+    box-shadow: 0 0 30px hsl(var(--prism-glow) / 0.4), 
+                0 0 60px hsl(var(--prism-glow) / 0.2),
+                inset 0 1px 0 hsl(var(--prism-glow) / 0.3);
+  }
+
+  /* 代码雨加载动画 */
+  .code-rain {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .code-rain::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      hsl(var(--prism-glow) / 0.1) 50%,
+      transparent 100%
+    );
+    animation: code-rain-fall 2s linear infinite;
+  }
+
+  /* 神经元脉冲 */
+  .neural-pulse {
+    position: relative;
+  }
+
+  .neural-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+      45deg,
+      hsl(var(--prism-glow) / 0.5),
+      hsl(var(--prism-glow-secondary) / 0.5),
+      hsl(var(--prism-glow) / 0.5)
+    );
+    background-size: 200% 200%;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+    animation: neural-pulse 3s ease-in-out infinite;
+  }
+
+  /* 数字滚动 */
+  .number-roll {
+    animation: number-roll 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 打字机效果 */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid hsl(var(--prism-glow));
+    white-space: nowrap;
+    animation: 
+      typing 3.5s steps(40, end),
+      blink-caret 0.75s step-end infinite;
+  }
+
+  /* 棱镜核心旋转 */
+  .prism-core-rotate {
+    animation: prism-rotate 20s linear infinite;
+    transform-style: preserve-3d;
+  }
+
+  /* 悬停放大 */
+  .hover-scale {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  /* 淡入淡出页面切换 */
+  .page-transition-enter {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .page-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .page-transition-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .page-transition-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  .transition-prism {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-prism-fast {
+    transition: var(--transition-fast);
+  }
+
+  .transition-prism-bounce {
+    transition: var(--transition-bounce);
+  }
+}
+
+@keyframes code-rain-fall {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes neural-pulse {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes number-roll {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: hsl(var(--prism-glow)); }
+}
+
+@keyframes prism-rotate {
+  0% { transform: rotateY(0deg) rotateX(0deg); }
+  25% { transform: rotateY(90deg) rotateX(15deg); }
+  50% { transform: rotateY(180deg) rotateX(0deg); }
+  75% { transform: rotateY(270deg) rotateX(-15deg); }
+  100% { transform: rotateY(360deg) rotateX(0deg); }
+}
+
+/* 自定义滚动条 */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
 }
