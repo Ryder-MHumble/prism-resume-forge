@@ -26,12 +26,12 @@ export const PrismCore = ({ onFileUpload, className }: PrismCoreProps) => {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
-    const resumeFile = files.find(file => 
+    const resumeFile = files.find(file =>
       file.type.includes('pdf') || file.type.includes('word') || file.type.includes('document')
     );
-    
+
     if (resumeFile) {
       const newFiles = { ...uploadedFiles, resume: resumeFile };
       setUploadedFiles(newFiles);
@@ -53,13 +53,13 @@ export const PrismCore = ({ onFileUpload, className }: PrismCoreProps) => {
       {/* 棱镜核心视觉 */}
       <div className="relative mb-8">
         <div className="prism-core-rotate">
-          <img 
-            src={prismCoreImage} 
-            alt="Prism Core" 
-            className="w-48 h-48 mx-auto opacity-80"
+          <img
+            src={prismCoreImage}
+            alt="Prism Core"
+            className="w-48 h-48 mx-auto"
           />
         </div>
-        
+
         {/* 粒子效果层 */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(6)].map((_, i) => (
@@ -126,7 +126,7 @@ export const PrismCore = ({ onFileUpload, className }: PrismCoreProps) => {
             <Briefcase className="w-5 h-5 text-secondary" />
             <span className="text-sm font-medium">职位描述 (可选)</span>
           </div>
-          
+
           {uploadedFiles.jd ? (
             <div className="p-3 bg-secondary/10 rounded border border-secondary/30">
               <p className="text-sm font-mono text-secondary">

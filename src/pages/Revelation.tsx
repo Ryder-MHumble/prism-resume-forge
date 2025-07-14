@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { sampleRevelationData } from '@/data/sampleData';
 import { resumeMarkdown } from '@/data/resumeExample';
 import { ResumeRenderer } from '@/components/resume/ResumeRenderer';
+import { CELEBRATION_CONFIG, PAGE_TEXT, EXPORT_CONFIG } from '@/data/revelationData';
 
 interface RevelationProps {
   onBack: () => void;
@@ -31,8 +32,8 @@ const CelebrationModal = ({
   scoreImprovement: number;
 }) => {
   const [showContent, setShowContent] = useState(false);
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, vx: number, vy: number}>>([]);
-  const [countdown, setCountdown] = useState(5);
+  const [particles, setParticles] = useState<Array<{ id: number, x: number, y: number, vx: number, vy: number }>>([]);
+  const [countdown, setCountdown] = useState(CELEBRATION_CONFIG.countdown);
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const CelebrationModal = ({
       setTimeout(() => setShowContent(true), 100);
 
       // 生成庆祝粒子
-      const newParticles = Array.from({ length: 50 }, (_, i) => ({
+      const newParticles = Array.from({ length: CELEBRATION_CONFIG.particleCount }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -106,7 +107,7 @@ const CelebrationModal = ({
         className={cn(
           "relative mx-4 w-full max-w-lg transform transition-all duration-500 ease-out",
           showContent && !isClosing ? "scale-100 opacity-100 translate-y-0" :
-          isClosing ? "scale-90 opacity-0 translate-y-4" : "scale-75 opacity-0 translate-y-8"
+            isClosing ? "scale-90 opacity-0 translate-y-4" : "scale-75 opacity-0 translate-y-8"
         )}
       >
         <Card className="border-emerald-500/50 bg-slate-800/95 p-8 shadow-2xl backdrop-blur-md">
@@ -137,10 +138,10 @@ const CelebrationModal = ({
 
             <div className="space-y-3">
               <h2 className="text-2xl font-bold text-emerald-400">
-                🎉 恭喜！优化完成！
+                {CELEBRATION_CONFIG.title}
               </h2>
               <p className="text-slate-300">
-                您的简历已成功优化升级
+                {CELEBRATION_CONFIG.subtitle}
               </p>
             </div>
 
@@ -159,11 +160,11 @@ const CelebrationModal = ({
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="rounded bg-slate-700/50 p-3">
                   <div className="text-slate-400">优化项目</div>
-                  <div className="font-semibold text-white">5+</div>
+                  <div className="font-semibold text-white">{CELEBRATION_CONFIG.achievementData.completedProjects}</div>
                 </div>
                 <div className="rounded bg-slate-700/50 p-3">
                   <div className="text-slate-400">竞争力</div>
-                  <div className="font-semibold text-emerald-400">显著提升</div>
+                  <div className="font-semibold text-emerald-400">{CELEBRATION_CONFIG.achievementData.competitiveness}</div>
                 </div>
               </div>
             </div>
@@ -171,15 +172,14 @@ const CelebrationModal = ({
             {/* 重要提示信息 */}
             <div className="rounded-lg bg-slate-700/30 border border-slate-600/50 p-4 text-left">
               <h3 className="text-sm font-semibold text-slate-200 mb-3 text-center">
-                ⚠️ 请注意
+                {CELEBRATION_CONFIG.importantNotice.title}
               </h3>
               <div className="space-y-2 text-sm text-slate-300">
                 <p>
-                  这份蓝图的每一句话，都源自你在"能力炼金屋"中的真实输入。
-                  请确保你能在面试中自信地为每一个字辩护。
+                  {CELEBRATION_CONFIG.importantNotice.content}
                 </p>
                 <p className="text-center font-semibold text-emerald-400 mt-3">
-                  ✨ 真正的强大，源于真实的你
+                  {CELEBRATION_CONFIG.importantNotice.highlight}
                 </p>
               </div>
             </div>
@@ -191,13 +191,13 @@ const CelebrationModal = ({
                 onClick={handleClose}
                 className="flex-1 border-slate-600 bg-slate-700/50 text-slate-200 hover:bg-slate-600"
               >
-                稍后查看 ({countdown}s)
+                {CELEBRATION_CONFIG.buttons.later} ({countdown}s)
               </Button>
               <Button
                 onClick={handleClose}
                 className="flex-1 bg-emerald-500 text-white hover:bg-emerald-600"
               >
-                立即查看结果
+                {CELEBRATION_CONFIG.buttons.view}
               </Button>
             </div>
           </div>
@@ -320,7 +320,7 @@ export const Revelation = () => {
               className="border-slate-600 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:text-white"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              返回炼金屋
+              {PAGE_TEXT.header.backButton}
             </Button>
 
             {/* 中间：标题和logo */}
@@ -335,7 +335,7 @@ export const Revelation = () => {
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-emerald-400" />
                 <h1 className="text-xl font-bold text-emerald-400">
-                  恭喜！你已解锁专属优化简历
+                  {PAGE_TEXT.header.title}
                 </h1>
               </div>
             </div>
@@ -349,7 +349,7 @@ export const Revelation = () => {
                 className="border-slate-600 bg-slate-800/50 text-slate-200 hover:bg-slate-700"
               >
                 <Download className="mr-2 h-4 w-4" />
-                导出
+                {PAGE_TEXT.actions.export}
               </Button>
               <Button
                 variant="outline"
@@ -357,13 +357,13 @@ export const Revelation = () => {
                 className="border-slate-600 bg-slate-800/50 text-slate-200 hover:bg-slate-700"
               >
                 <Share2 className="mr-2 h-4 w-4" />
-                分享
+                {PAGE_TEXT.actions.share}
               </Button>
               <Button
                 onClick={handleBackToPortal}
                 className="bg-emerald-500 text-white hover:bg-emerald-600"
               >
-                返回首页
+                {PAGE_TEXT.header.homeButton}
               </Button>
             </div>
           </div>
@@ -391,36 +391,36 @@ export const Revelation = () => {
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-emerald-400" />
-                  <h3 className="text-lg font-semibold text-white">评分对比</h3>
+                  <h3 className="text-lg font-semibold text-white">{PAGE_TEXT.scoreComparison.title}</h3>
                 </div>
-                  
+
                 <div className="grid grid-cols-2 gap-6">
                   {/* 优化前 */}
                   <div className="text-center space-y-2">
-                    <div className="text-sm text-slate-400">优化前</div>
+                    <div className="text-sm text-slate-400">{PAGE_TEXT.scoreComparison.before}</div>
                     <div className="text-4xl font-bold text-slate-400 transition-all duration-1000">
                       {animatedOldScore}
                     </div>
                     <div className="text-xs text-slate-500">分</div>
                   </div>
-                    
+
                   {/* 优化后 */}
                   <div className="text-center space-y-2">
-                    <div className="text-sm text-emerald-400">优化后</div>
+                    <div className="text-sm text-emerald-400">{PAGE_TEXT.scoreComparison.after}</div>
                     <div className="text-4xl font-bold text-emerald-400 transition-all duration-1000">
                       {animatedNewScore}
                     </div>
                     <div className="text-xs text-emerald-500">分</div>
                   </div>
                 </div>
-                  
+
                 {/* 提升显示 */}
                 <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-4 text-center">
                   <div className="text-lg font-bold text-emerald-400">
-                    提升 +{newScore - originalScore} 分
+                    {PAGE_TEXT.scoreComparison.improvement(newScore - originalScore)}
                   </div>
                   <div className="text-sm text-emerald-300">
-                    显著提升简历竞争力
+                    {PAGE_TEXT.scoreComparison.description}
                   </div>
                 </div>
               </div>
@@ -431,9 +431,9 @@ export const Revelation = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-emerald-400" />
-                  <h4 className="font-semibold text-white">完成的改进项目</h4>
+                  <h4 className="font-semibold text-white">{PAGE_TEXT.completedImprovements.title}</h4>
                 </div>
-                  
+
                 <div className="space-y-3">
                   {completedImprovements.map((improvement, index) => (
                     <div
@@ -451,14 +451,10 @@ export const Revelation = () => {
             {/* 下一步建议 */}
             <Card className="border-slate-700 bg-slate-800/50 p-6">
               <div className="space-y-4">
-                <h4 className="font-semibold text-white">下一步建议</h4>
-                  
+                <h4 className="font-semibold text-white">{PAGE_TEXT.nextSteps.title}</h4>
+
                 <div className="space-y-3">
-                  {[
-                    "使用优化后的简历投递目标职位",
-                    "准备面试时重点练习新增的项目描述",
-                    "定期更新简历内容保持最新状态"
-                  ].map((suggestion, index) => (
+                  {PAGE_TEXT.nextSteps.suggestions.map((suggestion, index) => (
                     <div key={index} className="flex items-start gap-3 text-sm text-slate-300">
                       <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-emerald-400" />
                       <span>{suggestion}</span>

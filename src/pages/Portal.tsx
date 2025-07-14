@@ -8,7 +8,8 @@ import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { cn } from '@/lib/utils';
 // 导入logo
 import prismLogo from '@/assets/极简logo.jpg';
-import saiboLogo from  '@/assets/赛博logo.jpg';
+import saiboLogo from '@/assets/赛博logo.jpg';
+import prismBgLogo from '@/assets/Prism-Logo.png';
 import { useNavigate } from 'react-router-dom';
 
 interface PortalProps {
@@ -46,24 +47,24 @@ export const Portal = () => {
   // 检查文件类型
   const isResumeFile = (file: File) => {
     return file.type.includes('pdf') ||
-           file.type.includes('word') ||
-           file.type.includes('document') ||
-           file.name.toLowerCase().endsWith('.pdf') ||
-           file.name.toLowerCase().endsWith('.doc') ||
-           file.name.toLowerCase().endsWith('.docx');
+      file.type.includes('word') ||
+      file.type.includes('document') ||
+      file.name.toLowerCase().endsWith('.pdf') ||
+      file.name.toLowerCase().endsWith('.doc') ||
+      file.name.toLowerCase().endsWith('.docx');
   };
 
   const isJDFile = (file: File) => {
     return file.type.includes('pdf') ||
-           file.type.includes('word') ||
-           file.type.includes('document') ||
-           file.type.includes('text') ||
-           file.type.includes('image') ||
-           file.name.toLowerCase().endsWith('.pdf') ||
-           file.name.toLowerCase().endsWith('.doc') ||
-           file.name.toLowerCase().endsWith('.docx') ||
-           file.name.toLowerCase().endsWith('.txt') ||
-           file.name.toLowerCase().endsWith('.png');
+      file.type.includes('word') ||
+      file.type.includes('document') ||
+      file.type.includes('text') ||
+      file.type.includes('image') ||
+      file.name.toLowerCase().endsWith('.pdf') ||
+      file.name.toLowerCase().endsWith('.doc') ||
+      file.name.toLowerCase().endsWith('.docx') ||
+      file.name.toLowerCase().endsWith('.txt') ||
+      file.name.toLowerCase().endsWith('.png');
   };
 
   // 简历文件拖拽处理
@@ -145,16 +146,16 @@ export const Portal = () => {
         <header className="relative z-20 h-16 flex items-center justify-between px-8 border-b border-primary/20 bg-background/80 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              {/* 替换为自定义logo */}
-              <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30">
+              {/* 使用saiboLogo */}
+              <div className="w-8 h-8 overflow-hidden flex items-center justify-center">
                 <img
-                  src={prismLogo}
+                  src={saiboLogo}
                   alt="Prism Logo"
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div>
-                <h1 className="text-lg font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                <h1 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                   棱镜 Prism
                 </h1>
                 <p className="text-xs text-muted-foreground">个人价值光谱分析仪</p>
@@ -189,40 +190,17 @@ export const Portal = () => {
 
                   {/* 装饰性网格 */}
                   <div className="absolute inset-0 opacity-[0.02]"
-                       style={{
-                         backgroundImage: `
+                    style={{
+                      backgroundImage: `
                            linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
                            linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
                          `,
-                         backgroundSize: '32px 32px'
-                       }}
+                      backgroundSize: '32px 32px'
+                    }}
                   />
                 </div>
 
                 <div className="relative z-10 space-y-8 py-2">
-                  {/* Logo和标题区域 - 改为横向布局 */}
-                  <div className="flex items-center gap-6 mb-8">
-                    {/* Logo区域 - 移除边框 */}
-                    <div className="flex-shrink-0">
-                      <div className="w-30 h-20 flex items-center justify-center">
-                        <img
-                          src={saiboLogo}
-                          alt="Prism Logo"
-                          className="max-w-full max-h-full object-contain filter drop-shadow-sm"
-                        />
-                      </div>
-                    </div>
-
-                    {/* 品牌标题和描述 */}
-                    <div className="flex-1">
-                      <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent mb-2">
-                        棱镜 Prism
-                      </h2>
-                      <p className="text-lg text-muted-foreground font-medium">
-                        折射你的全部才能
-                      </p>
-                    </div>
-                  </div>
 
                   {/* 品牌故事内容 */}
                   <div className="space-y-6">
@@ -288,30 +266,6 @@ export const Portal = () => {
                             ，讲述它。
                           </p>
                         </div>
-
-                        {/* 核心理念强调 */}
-                        {/* <div className="mt-6 p-4 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-2xl border border-primary/20">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">核</span>
-                            </div>
-                            <h4 className="font-semibold text-primary">核心哲学</h4>
-                          </div>
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div className="text-center p-2 bg-primary/10 rounded-lg">
-                              <div className="font-semibold text-primary">解析</div>
-                              <div className="text-muted-foreground/70">不创造</div>
-                            </div>
-                            <div className="text-center p-2 bg-secondary/10 rounded-lg">
-                              <div className="font-semibold text-secondary">折射</div>
-                              <div className="text-muted-foreground/70">不美化</div>
-                            </div>
-                            <div className="text-center p-2 bg-primary/10 rounded-lg">
-                              <div className="font-semibold text-primary">赋能</div>
-                              <div className="text-muted-foreground/70">不包办</div>
-                            </div>
-                          </div>
-                        </div> */}
                       </div>
                     </div>
 
@@ -377,36 +331,104 @@ export const Portal = () => {
           {/* 左侧控制面板 - 完全移除背景色，只保留边框和模糊效果 */}
           <div className="w-2/5 flex flex-col border-r border-primary/20 backdrop-blur-sm relative">
 
-            {/* 面板标签 */}
-            <div className="flex border-b border-primary/20">
-              {[
-                { id: 'upload', label: '上传材料', icon: Upload },
-                { id: 'ready', label: '光谱分析', icon: Zap }
-              ].map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActivePanel(id as any)}
-                  className={cn(
-                    "flex-1 py-4 px-6 text-sm font-medium transition-all duration-200 border-b-2 backdrop-blur-sm",
-                    activePanel === id
-                      ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/20"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-primary/5"
-                  )}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Icon className="w-4 h-4" />
-                    {label}
-                  </div>
-                </button>
-              ))}
+            {/* 面板标签 - 科幻风格增强 */}
+            <div className="relative border-b border-primary/20 bg-gradient-to-r from-background/50 to-background/30 backdrop-blur-md">
+              {/* 扫描线动画 */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent animate-pulse"
+                  style={{
+                    top: '50%',
+                    animationDuration: '2s',
+                    boxShadow: '0 0 10px rgba(34, 211, 238, 0.4)'
+                  }} />
+              </div>
+
+              <div className="flex relative z-10">
+                {[
+                  { id: 'upload', label: '上传材料', icon: Upload, color: 'cyan' },
+                  { id: 'ready', label: '分析配置', icon: Zap, color: 'purple' }
+                ].map(({ id, label, icon: Icon, color }) => (
+                  <button
+                    key={id}
+                    onClick={() => setActivePanel(id as any)}
+                    className={cn(
+                      "group relative flex-1 py-5 px-8 text-sm font-medium transition-all duration-300 overflow-hidden",
+                      "hover:bg-gradient-to-br hover:from-primary/15 hover:to-secondary/10",
+                      activePanel === id
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {/* 全息背景效果 */}
+                    <div className={cn(
+                      "absolute inset-0 transition-all duration-500",
+                      activePanel === id
+                        ? "bg-gradient-to-br from-primary/20 via-primary/10 to-transparent opacity-100"
+                        : "opacity-0 group-hover:opacity-50"
+                    )} />
+
+                    {/* 霓虹边框 */}
+                    {activePanel === id && (
+                      <>
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 shadow-lg"
+                          style={{ boxShadow: '0 0 15px rgba(34, 211, 238, 0.6)' }} />
+                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+                      </>
+                    )}
+
+                    {/* 粒子效果 */}
+                    {activePanel === id && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        {[...Array(4)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1 h-1 bg-primary rounded-full animate-ping opacity-60"
+                            style={{
+                              left: `${20 + i * 20}%`,
+                              top: `${30 + (i % 2) * 40}%`,
+                              animationDelay: `${i * 0.3}s`,
+                              animationDuration: '2s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="relative z-10 flex items-center justify-center gap-3">
+                      <Icon className={cn(
+                        "w-4 h-4 transition-all duration-300",
+                        activePanel === id
+                          ? "text-primary drop-shadow-lg scale-110"
+                          : "group-hover:scale-105"
+                      )} />
+                      <span className={cn(
+                        "font-medium tracking-wide transition-all duration-300",
+                        activePanel === id && "text-shadow-glow"
+                      )}>
+                        {label}
+                      </span>
+                    </div>
+
+                    {/* 悬浮发光效果 */}
+                    <div className={cn(
+                      "absolute inset-0 rounded-lg transition-all duration-300 pointer-events-none",
+                      "group-hover:shadow-lg group-hover:shadow-primary/20",
+                      activePanel === id && "shadow-xl shadow-primary/30"
+                    )} />
+                  </button>
+                ))}
+              </div>
+
+              {/* 底部装饰线 */}
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
             </div>
-              
+
             {/* 面板内容 */}
             <div className="flex-1 p-6 overflow-hidden">
               {/* 文件上传面板 */}
               {activePanel === 'upload' && (
                 <div className="h-full overflow-y-auto scrollbar-hide space-y-8">
-            
+
                   {/* 主要上传区域 - 简历 */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between mb-3">
@@ -414,7 +436,7 @@ export const Portal = () => {
                         <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                         <span className="text-sm font-medium text-primary">简历文件 (必需)</span>
                       </div>
-              
+
                       {/* 下一步按钮 */}
                       {uploadedFiles.resume && (
                         <button
@@ -432,18 +454,41 @@ export const Portal = () => {
                       onDragLeave={handleResumeDragLeave}
                       onDrop={handleResumeDrop}
                       className={cn(
-                        "group relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-500 cursor-pointer",
-                        "backdrop-blur-md", // 移除背景色，只保留模糊效果
+                        "group relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-500 cursor-pointer overflow-hidden",
+                        "backdrop-blur-md",
                         "hover:border-primary/50 hover:bg-primary/8 hover:shadow-lg hover:shadow-primary/10",
                         isDragOver.resume ? "border-primary bg-primary/12 scale-[1.02] shadow-2xl shadow-primary/20" : "border-border/50",
                         uploadedFiles.resume && "border-primary/60 bg-primary/12 shadow-lg shadow-primary/10"
                       )}
                       onClick={() => document.getElementById('resume-file-input')?.click()}
                     >
-                      {/* 背景装饰 */}
+                      {/* 科幻背景装饰增强 */}
                       <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                        <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                        {/* 渐变边框 */}
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                        <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent" />
+
+                        {/* 粒子效果 */}
+                        <div className="absolute inset-0 opacity-60">
+                          {[...Array(6)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="absolute w-1 h-1 bg-primary rounded-full animate-pulse opacity-40"
+                              style={{
+                                left: `${15 + Math.random() * 70}%`,
+                                top: `${15 + Math.random() * 70}%`,
+                                animationDelay: `${i * 0.4}s`,
+                                animationDuration: `${2 + Math.random()}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+
+                        {/* 角落装饰 */}
+                        <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-primary/30 rounded-tl-lg" />
+                        <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-primary/30 rounded-tr-lg" />
+                        <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-secondary/30 rounded-bl-lg" />
+                        <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-secondary/30 rounded-br-lg" />
                       </div>
 
                       <div className="relative z-10 space-y-6 pointer-events-none">
@@ -537,18 +582,43 @@ export const Portal = () => {
                       onDragLeave={handleJDDragLeave}
                       onDrop={handleJDDrop}
                       className={cn(
-                        "group relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-500 cursor-pointer",
-                        "backdrop-blur-md", // 移除背景色，只保留模糊效果
+                        "group relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-500 cursor-pointer overflow-hidden",
+                        "backdrop-blur-md",
                         "hover:border-secondary/50 hover:bg-secondary/8 hover:shadow-lg hover:shadow-secondary/10",
                         isDragOver.jd ? "border-secondary bg-secondary/12 scale-[1.02] shadow-2xl shadow-secondary/20" : "border-border/40",
                         uploadedFiles.jd && "border-secondary/60 bg-secondary/12 shadow-lg shadow-secondary/10"
                       )}
                       onClick={() => document.getElementById('jd-file-input')?.click()}
                     >
-                      {/* 背景装饰 */}
+                      {/* 科幻背景装饰增强 */}
                       <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                        <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-secondary/40 to-transparent" />
-                        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                        {/* 渐变边框 */}
+                        <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-purple-400/40 to-transparent" />
+                        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400/40 to-transparent" />
+
+
+
+                        {/* 粒子效果 */}
+                        <div className="absolute inset-0 opacity-50">
+                          {[...Array(4)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="absolute w-0.5 h-0.5 bg-secondary rounded-full animate-pulse opacity-60"
+                              style={{
+                                left: `${20 + Math.random() * 60}%`,
+                                top: `${20 + Math.random() * 60}%`,
+                                animationDelay: `${i * 0.6}s`,
+                                animationDuration: `${2.5 + Math.random()}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+
+                        {/* 角落装饰 */}
+                        <div className="absolute top-3 left-3 w-4 h-4 border-l-2 border-t-2 border-secondary/30 rounded-tl-lg" />
+                        <div className="absolute top-3 right-3 w-4 h-4 border-r-2 border-t-2 border-secondary/30 rounded-tr-lg" />
+                        <div className="absolute bottom-3 left-3 w-4 h-4 border-l-2 border-b-2 border-purple-400/30 rounded-bl-lg" />
+                        <div className="absolute bottom-3 right-3 w-4 h-4 border-r-2 border-b-2 border-pink-400/30 rounded-br-lg" />
                       </div>
 
                       <div className="relative z-10 pointer-events-none">
@@ -654,9 +724,19 @@ export const Portal = () => {
               )}
             </div>
           </div>
-            
+
           {/* 右侧展示区域 */}
           <div className="flex-1 relative overflow-hidden">
+            {/* 背景Logo */}
+            <div
+              className="absolute inset-0 opacity-[0.3] pointer-events-none z-0"
+              style={{
+                backgroundImage: `url(${prismBgLogo})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center right'
+              }}
+            />
 
             {/* 主布局容器 */}
             <div className="relative z-10 h-full flex">
@@ -677,18 +757,50 @@ export const Portal = () => {
                   </div>
                 </div>
 
-                {/* 主标题区域 */}
+                {/* 主标题区域 - 增强全息粒子效果 */}
                 <div className="mb-12">
-                  <h1 className="text-[clamp(3rem,8vw,6rem)] font-bold leading-[0.85] tracking-tight mb-6">
+                  <h1 className="text-[clamp(3rem,8vw,6rem)] font-bold leading-[0.85] tracking-tight mb-6 relative">
                     <div className="relative inline-block">
-                      <span className="bg-gradient-to-r from-primary via-primary/95 to-primary/80 bg-clip-text text-transparent drop-shadow-lg">
+                      {/* 全息粒子背景 */}
+                      <div className="absolute inset-0 -m-4">
+                        {[...Array(8)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1 h-1 bg-primary rounded-full animate-pulse opacity-60"
+                            style={{
+                              left: `${Math.random() * 100}%`,
+                              top: `${Math.random() * 100}%`,
+                              animationDelay: `${i * 0.3}s`,
+                              animationDuration: `${2 + Math.random() * 2}s`
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="relative bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg">
                         折射你的
                       </span>
                       <div className="absolute -right-4 top-4 w-2 h-2 bg-primary rounded-full animate-pulse shadow-lg shadow-primary/50" />
                     </div>
                     <br />
                     <div className="relative inline-block ml-8">
-                      <span className="bg-gradient-to-r from-secondary via-secondary/95 to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">
+                      {/* 粒子聚合效果 */}
+                      <div className="absolute inset-0 -m-4">
+                        {[...Array(6)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-0.5 h-0.5 bg-secondary rounded-full animate-ping opacity-40"
+                            style={{
+                              left: `${20 + Math.random() * 60}%`,
+                              top: `${20 + Math.random() * 60}%`,
+                              animationDelay: `${i * 0.5}s`,
+                              animationDuration: `${3 + Math.random()}s`
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="relative bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-lg">
                         全部才能
                       </span>
                       <div className="absolute -left-6 -top-2 w-16 h-px bg-gradient-to-r from-secondary/60 to-transparent" />
@@ -696,68 +808,51 @@ export const Portal = () => {
                   </h1>
 
                   <div className="max-w-md">
-                    <p className="text-lg text-muted-foreground/80 leading-relaxed font-light mb-4">
-                      面对AI招聘官？别让平庸的简历，埋没你发光的实力
-                    </p>
-                    <p className="text-base text-muted-foreground/60 font-light">
-                      你的职业生涯，需要一次光谱分析
-                    </p>
-                  </div>
-                </div>
-
-                {/* 核心理念 - 增强科幻感 */}
-                <div className="space-y-4">
-                  <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground/50 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                    <span>CORE PRINCIPLES</span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent" />
-                  </div>
-
-                  {[
-                    {
-                      number: "01",
-                      title: "解析，而非创造",
-                      subtitle: "Analyze, Don't Invent",
-                      desc: "深度洞察每段真实经历背后的隐藏价值"
-                    },
-                    {
-                      number: "02",
-                      title: "折射，而非美化",
-                      subtitle: "Refract, Don't Beautify",
-                      desc: "将能力折射到企业最关心的维度"
-                    },
-                    {
-                      number: "03",
-                      title: "赋能，而非包办",
-                      subtitle: "Empower, Don't Do It",
-                      desc: "引导自我发现，赋予持久的自信力量"
-                    }
-                  ].map(({ number, title, subtitle, desc }, index) => (
-                    <div
-                      key={index}
-                      className="group flex gap-4 py-3 pl-4 transition-all duration-300 backdrop-blur-sm"
-                    >
-                      <div className="flex-shrink-0">
-                        <div className="text-xl font-bold text-primary/60 group-hover:text-primary/90 transition-colors duration-300 font-mono">
-                          {number}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-baseline gap-3 mb-1">
-                          <h3 className="text-base font-semibold text-primary/90 group-hover:text-primary transition-colors duration-300">
-                            {title}
-                          </h3>
-                          <span className="text-xs text-muted-foreground/60 font-mono tracking-wider">
-                            {subtitle}
+                    {/* 故障艺术字副标题 */}
+                    <div className="relative mb-4">
+                      <p className="text-lg leading-relaxed font-light relative z-10">
+                        <span className="text-muted-foreground/80">面对AI招聘官？</span>
+                        <span className="relative inline-block ml-2">
+                          <span className="absolute inset-0 text-red-400/70 animate-pulse" style={{
+                            textShadow: '2px 0 0 #ef4444, -2px 0 0 #3b82f6',
+                            animationDuration: '0.1s'
+                          }}>
+                            别让平庸的简历
                           </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground/90 leading-relaxed text-shadow">
-                          {desc}
-                        </p>
-                      </div>
+                          <span className="relative text-muted-foreground/80 line-through decoration-red-400/60 decoration-2">
+                            别让平庸的简历
+                          </span>
+                        </span>
+                        <span className="text-muted-foreground/80">，埋没你发光的实力</span>
+                      </p>
+
+                      {/* 故障干扰线 */}
+                      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent animate-pulse"
+                        style={{ animationDuration: '0.15s' }} />
                     </div>
-                  ))}
+
+                    <p className="text-base text-muted-foreground/60 font-light">
+                      你的职业生涯，需要一次
+                      <span className="relative inline-block mx-1">
+                        <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-semibold">
+                          光谱分析
+                        </span>
+                        <div className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-primary/50 to-secondary/50" />
+                      </span>
+                    </p>
+                  </div>
                 </div>
+
+                {/* 添加CSS动画样式 */}
+                <style>{`
+                  @keyframes scan {
+                    0%, 100% { top: 0%; opacity: 0; }
+                    10% { opacity: 1; }
+                    50% { top: 50%; opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { top: 100%; opacity: 0; }
+                  }
+                `}</style>
               </div>
 
               {/* 右侧装饰区 */}

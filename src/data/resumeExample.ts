@@ -2,11 +2,13 @@ export const resumeMarkdown = `# 孙铭浩
 
 ---
 
+<div class="contact-info">
 
 **个人网址（需VPN）：** https://personal-resume-jet.vercel.app
 
 **手机：** 15268406215 | **邮箱：** mhumble010221@gmail.com
 
+</div>
 
 ---
 
@@ -18,8 +20,8 @@ export const resumeMarkdown = `# 孙铭浩
 - **荣誉奖项：** 二等奖学金；中国机器人及人工智能大赛一等奖一次、二等奖两次，三等奖一次
 
 **学术成果：**
-- **已接收：** Lightweight multidimensional feature enhancement algorithm LPS-YOLO for UAV remote sensing target detection（中科院二区，WOS一区）
-- **在审：** A Novel Adaptive YOLO-Based Framework for UAV Remote Sensing Image Object Detection with Enhanced Sampling and Detect Head Mechanisms（中科院二区，WOS一区）
+- <span class="status-accepted">**已接收：**</span> Lightweight multidimensional feature enhancement algorithm LPS-YOLO for UAV remote sensing target detection（中科院二区，WOS一区）
+- <span class="status-under-review">**在审：**</span> A Novel Adaptive YOLO-Based Framework for UAV Remote Sensing Image Object Detection with Enhanced Sampling and Detect Head Mechanisms（中科院二区，WOS一区）
 
 ### 北京城市学院 | 数据科学与大数据技术-学士
 **时间：** 2019.09 - 2023.06
@@ -29,13 +31,24 @@ export const resumeMarkdown = `# 孙铭浩
 
 ---
 
-## 💪 个人优势
+## ? 个人优势
 
 ### 专业技能知识
+
+<div class="skills-grid">
+<div class="skill-category">
+
 - **原型设计工具：** Figma、Axure10
 - **数据与开发技术：** SQL、Vue3、React、Swift、SpringBook、Kotlin
+
+</div>
+<div class="skill-category">
+
 - **LLM底层知识：** Transformer、BERT、CPT、RAC、Agent、BLUE、Pterosh、Longchain框架、Premat-代码
 - **前沿算法了解：** MaE、KAC、ChatGSM、DeepSeoulv2、L1.5
+
+</div>
+</div>
 
 ### 前沿AI产品使用经验
 积累了丰富的前沿AI产品使用实践经验，涵盖国内主流产品如Coze、豆包、智谱清言、天工等，海外知名产品如NotebookLM、perplexity、Claude、Windsurf、Cursor等，以及多模态产品文心一言、Veo2、可灵AI，并深度参与百度千帆大模型平台、百度飞桨AI星河社区、火山引擎、阿里魔搭ModelScope等大模型平台与社区的探索与应用，对不同平台的技术架构、功能特点及应用生态有深入的理解与洞察。
@@ -45,7 +58,7 @@ export const resumeMarkdown = `# 孙铭浩
 
 ---
 
-## 💼 实习经历
+## ? 实习经历
 
 ### 美团－基础技术平台 | LLM平台产品经理
 **时间：** 2024.11 - 2025.4

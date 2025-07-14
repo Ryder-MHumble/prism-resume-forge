@@ -14,6 +14,14 @@ import cyberLogo from '@/assets/赛博logo.jpg';
 import { useNavigate } from 'react-router-dom';
 import { sampleDashboardData } from '@/data/sampleData';
 import { ResumeRenderer } from '@/components/resume/ResumeRenderer';
+import {
+  HIGHLIGHTED_SECTIONS,
+  ANALYSIS_SUMMARY,
+  RADAR_ANALYSIS,
+  SCORE_LEVELS,
+  RECOMMENDED_RESOURCES,
+  PAGE_TEXT
+} from '@/data/dashboardData';
 
 interface DashboardData {
   score: number;
@@ -47,7 +55,7 @@ export const Dashboard = () => {
   const [activeTab, setActiveTab] = useState<string>('weaknesses');
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [isAnalysisSummaryExpanded, setIsAnalysisSummaryExpanded] = useState(true);
-  const [isRadarChartExpanded, setIsRadarChartExpanded] = useState(false);
+  const [isRadarChartExpanded, setIsRadarChartExpanded] = useState(true);
 
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -67,29 +75,8 @@ export const Dashboard = () => {
   // 使用统一的简历内容
   const markdownContent = resumeMarkdown;
 
-  // 示例的高亮部分 - 在实际应用中，这应该根据扫描结果动态生成
-  const highlightedSections = {
-    "project1": {
-      text: "[项目1] 描述中缺少可量化的...",
-      lineStart: 32,
-      lineEnd: 36
-    },
-    "skill1": {
-      text: "精通XX为无效描述，需具体化",
-      lineStart: 62,
-      lineEnd: 65
-    },
-    "project2": {
-      text: "[项目2] 描述中缺少可量化的...",
-      lineStart: 39,
-      lineEnd: 43
-    },
-    "skill2": {
-      text: "精通XX为无效描述，需具体化",
-      lineStart: 66,
-      lineEnd: 70
-    },
-  };
+  // 使用从data文件导入的高亮部分数据
+  const highlightedSections = HIGHLIGHTED_SECTIONS;
 
   const handleWeaknessClick = (weaknessId: string) => {
     setHighlightedSection(weaknessId);
@@ -122,13 +109,13 @@ export const Dashboard = () => {
               onClick={handleBack}
               className="text-sm"
             >
-              重新评估（剩余3次）
+              {PAGE_TEXT.header.backButton}
             </Button>
 
-            <h1 className="text-xl font-semibold">评价仪表盘</h1>
+            <h1 className="text-xl font-semibold">{PAGE_TEXT.header.title}</h1>
 
             <div className="text-sm text-muted-foreground">
-              深度挖掘你的潜力，重塑你的简历
+              {PAGE_TEXT.header.subtitle}
             </div>
           </div>
         </div>
@@ -141,24 +128,24 @@ export const Dashboard = () => {
           <div className="md:col-span-7 space-y-3 animate-in slide-in-from-left duration-500 delay-100">
             {/* 智能分析总结模块 - 重构版本 */}
             <div className="relative">
-              <Card className="relative border border-border/50 rounded-xl overflow-hidden bg-gradient-to-br from-background/98 to-muted/10 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="p-4 pb-2">
+              <Card className="relative border border-primary/20 rounded-xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
+                <div className="p-3 pb-2">
                   {/* 精简的标题区域 */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 overflow-hidden shadow-md">
-                        <img src={cyberLogo} alt="Cyber Logo" className="w-full h-full object-cover" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary/20 to-secondary/20 p-1">
+                        <img src={cyberLogo} alt="Prism Logo" className="w-full h-full object-cover rounded" />
                       </div>
                       <div>
-                        <h3 className="text-base font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                          智能分析总结
+                        <h3 className="text-sm font-semibold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">
+                          {ANALYSIS_SUMMARY.title}
                         </h3>
-                        <p className="text-xs text-muted-foreground">基于大模型算法的综合评估</p>
+                        <p className="text-xs text-muted-foreground/80">{ANALYSIS_SUMMARY.subtitle}</p>
                       </div>
                     </div>
                     <button
                       onClick={() => setIsAnalysisSummaryExpanded(!isAnalysisSummaryExpanded)}
-                      className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-primary border border-muted hover:border-primary rounded-lg transition-colors"
+                      className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary border border-primary/20 hover:border-primary/40 rounded-lg transition-colors hover:bg-primary/5"
                     >
                       {isAnalysisSummaryExpanded ? "收起" : "展开"}
                     </button>
@@ -166,33 +153,22 @@ export const Dashboard = () => {
 
                   {/* 精简的分析内容 - 条件渲染 */}
                   {isAnalysisSummaryExpanded && (
-                    <div className="relative p-4 rounded-lg bg-muted/30 border border-border/30">
-                      <div className="space-y-3">
+                    <div className="relative p-3 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10">
+                      <div className="space-y-2.5">
                         {/* 精简的分析点 */}
                         <div className="space-y-2.5">
-                          <div className="flex items-start gap-2.5">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 animate-pulse" />
-                            <p className="text-sm text-foreground leading-relaxed">
-                              <span className="font-medium text-primary">整体评估：</span>
-                              简历整体结构清晰，技术栈匹配度较高，但部分项目描述缺乏具体量化的成果展示。
-                            </p>
-                          </div>
-
-                          <div className="flex items-start gap-2.5">
-                            <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-1.5 animate-pulse" style={{ animationDelay: '0.3s' }} />
-                            <p className="text-sm text-foreground leading-relaxed">
-                              <span className="font-medium text-secondary">关键发现：</span>
-                              技能部分存在过度使用"精通"等模糊词汇的情况，建议重点优化项目成果的数据化表达。
-                            </p>
-                          </div>
-
-                          <div className="flex items-start gap-2.5">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 animate-pulse" style={{ animationDelay: '0.6s' }} />
-                            <p className="text-sm text-foreground leading-relaxed">
-                              <span className="font-medium text-primary">优化建议：</span>
-                              增加具体的项目数据和成果指标，提升简历的说服力和竞争优势。
-                            </p>
-                          </div>
+                          {ANALYSIS_SUMMARY.analysisPoints.map((point, index) => (
+                            <div key={point.type} className="flex items-start gap-2.5">
+                              <div
+                                className={`w-1.5 h-1.5 bg-${point.color} rounded-full mt-1.5 animate-pulse`}
+                                style={{ animationDelay: `${point.delay}s` }}
+                              />
+                              <p className="text-sm text-foreground leading-relaxed">
+                                <span className={`font-medium text-${point.color}`}>{point.label}：</span>
+                                {point.content}
+                              </p>
+                            </div>
+                          ))}
                         </div>
 
                         {/* 精简的标签 */}
@@ -273,26 +249,26 @@ export const Dashboard = () => {
 
                 {/* 能力光谱分析 - 统一样式版本 */}
                 <div>
-                  <Card className="relative border border-border/50 rounded-xl overflow-hidden bg-gradient-to-br from-background/98 to-muted/10 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div className="p-4 pb-2">
+                  <Card className="relative border border-primary/20 rounded-xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
+                    <div className="p-3 pb-2">
                       {/* 标题区域 */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
-                            <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary/20 to-secondary/20 p-1">
+                            <img src={cyberLogo} alt="Prism Logo" className="w-full h-full object-cover rounded" />
                           </div>
                           <div>
-                            <h3 className="text-base font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            <h3 className="text-sm font-semibold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">
                               能力光谱分析
                             </h3>
-                            <p className="text-xs text-muted-foreground">多维度技能评估与量化</p>
+                            <p className="text-xs text-muted-foreground/80">多维度技能评估与量化</p>
                           </div>
                         </div>
 
                         {/* 展开收起按钮 */}
                         <button
                           onClick={() => setIsRadarChartExpanded(!isRadarChartExpanded)}
-                          className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-primary border border-muted hover:border-primary rounded-lg transition-colors"
+                          className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary border border-primary/20 hover:border-primary/40 rounded-lg transition-colors hover:bg-primary/5"
                         >
                           {isRadarChartExpanded ? "收起" : "展开"}
                         </button>
@@ -338,14 +314,14 @@ export const Dashboard = () => {
                               <div className={cn(
                                 "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                                 data.score >= 80 ? "bg-green-100 text-green-700 border border-green-200" :
-                                data.score >= 60 ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
-                                "bg-red-100 text-red-700 border border-red-200"
+                                  data.score >= 60 ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
+                                    "bg-red-100 text-red-700 border border-red-200"
                               )}>
                                 <div className={cn(
                                   "w-2 h-2 rounded-full",
                                   data.score >= 80 ? "bg-green-500" :
-                                  data.score >= 60 ? "bg-yellow-500" :
-                                  "bg-red-500"
+                                    data.score >= 60 ? "bg-yellow-500" :
+                                      "bg-red-500"
                                 )} />
                                 {data.score >= 80 ? "优秀" : data.score >= 60 ? "良好" : "待提升"}
                               </div>
@@ -364,9 +340,9 @@ export const Dashboard = () => {
                 {/* 弱点扫描和资源探测 - 重构版本 */}
                 <div className="relative">
                   {/* 背景装饰 */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 rounded-2xl blur-xl opacity-50" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-2xl blur-xl opacity-60" />
 
-                  <Card className="relative border-0 rounded-2xl overflow-hidden bg-gradient-to-br from-background/95 to-muted/20 backdrop-blur-sm shadow-2xl">
+                  <Card className="relative border border-primary/20 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
                     <Tabs defaultValue="weaknesses" onValueChange={setActiveTab}>
                       {/* 重新设计的Tab导航 */}
                       <div className="relative p-6 pb-0">
@@ -400,7 +376,7 @@ export const Dashboard = () => {
                               )} />
                               <span className="font-semibold">弱点扫描</span>
                             </button>
-                
+
                             <button
                               onClick={() => setActiveTab('resources')}
                               className={cn(
@@ -505,27 +481,22 @@ export const Dashboard = () => {
                           {/* 资源统计 */}
                           <div className="grid grid-cols-2 gap-4 mb-6">
                             <div className="text-center p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                              <div className="text-2xl font-bold text-primary">12</div>
+                              <div className="text-2xl font-bold text-primary">{RECOMMENDED_RESOURCES.stats.total}</div>
                               <div className="text-xs text-primary/80">推荐资源</div>
                             </div>
                             <div className="text-center p-4 rounded-xl bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20">
-                              <div className="text-2xl font-bold text-secondary">95%</div>
+                              <div className="text-2xl font-bold text-secondary">{RECOMMENDED_RESOURCES.stats.matchRate}%</div>
                               <div className="text-xs text-secondary/80">匹配度</div>
                             </div>
                           </div>
 
                           <div className="space-y-3">
                             <p className="text-sm text-muted-foreground mb-4 text-center">
-                              基于你的简历内容和行业趋势，为你精选以下学习资源
+                              {RECOMMENDED_RESOURCES.description}
                             </p>
 
                             <div className="grid gap-3">
-                              {[
-                                { title: "前端性能优化最佳实践", tag: "热门", color: "from-red-500 to-pink-500" },
-                                { title: "React架构设计模式", tag: "推荐", color: "from-blue-500 to-cyan-500" },
-                                { title: "数据可视化高级技巧", tag: "进阶", color: "from-purple-500 to-indigo-500" },
-                                { title: "技术简历写作指南", tag: "必读", color: "from-green-500 to-emerald-500" }
-                              ].map((resource, i) => (
+                              {RECOMMENDED_RESOURCES.items.map((resource, i) => (
                                 <div
                                   key={i}
                                   className="group relative p-4 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-muted hover:border-primary/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:scale-[1.02]"

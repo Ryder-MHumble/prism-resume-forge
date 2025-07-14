@@ -7,15 +7,16 @@ import { cn } from '@/lib/utils';
 import { resumeMarkdown } from '@/data/resumeExample';
 import { useNavigate, useParams } from 'react-router-dom';
 import { sampleWeaknessItems } from '@/data/sampleData';
+import { PAGE_TEXT } from '@/data/crucibleData';
 
 export const Crucible = () => {
   const navigate = useNavigate();
   const { weaknessId } = useParams<{ weaknessId?: string }>();
 
-  const [improvements, setImprovements] = useState<Array<{id: string, original: string, improved: string, completed: boolean}>>([]);
+  const [improvements, setImprovements] = useState<Array<{ id: string, original: string, improved: string, completed: boolean }>>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [editedContent, setEditedContent] = useState('');
-  
+
   // 使用示例数据
   const weaknesses = sampleWeaknessItems;
 
@@ -33,7 +34,7 @@ export const Crucible = () => {
       completed: false
     })));
   }, [weaknessId]);
-      
+
   // 导航函数
   const handleBack = () => {
     navigate('/dashboard');
@@ -84,13 +85,13 @@ export const Crucible = () => {
               className="text-sm"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              返回仪表盘
+              {PAGE_TEXT.header.backButton}
             </Button>
 
-            <h1 className="text-xl font-semibold">能力炼金屋</h1>
+            <h1 className="text-xl font-semibold">{PAGE_TEXT.header.title}</h1>
 
             <div className="text-sm text-muted-foreground">
-              优化 {currentStep + 1} / {improvements.length}
+              {PAGE_TEXT.header.progressTemplate(currentStep + 1, improvements.length)}
             </div>
           </div>
         </div>
@@ -109,26 +110,26 @@ export const Crucible = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground mb-2">原始内容:</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">{PAGE_TEXT.improvementForm.originalLabel}</h3>
                     <div className="p-3 bg-muted/30 rounded-md text-sm">
                       {improvements[currentStep].original}
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground mb-2">改进建议:</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">{PAGE_TEXT.improvementForm.suggestionLabel}</h3>
                     <div className="p-3 bg-primary/5 border border-primary/20 rounded-md text-sm">
                       {weaknesses.find(w => w.id === improvements[currentStep].id)?.suggestion}
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground mb-2">你的改进:</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">{PAGE_TEXT.improvementForm.yourImprovementLabel}</h3>
                     <Textarea
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
                       className="min-h-[120px]"
-                      placeholder="请在这里输入改进后的内容..."
+                      placeholder={PAGE_TEXT.improvementForm.placeholder}
                     />
                   </div>
                 </div>
@@ -140,11 +141,11 @@ export const Crucible = () => {
                   variant="outline"
                   onClick={() => currentStep > 0 ? setCurrentStep(currentStep - 1) : handleBack()}
                 >
-                  {currentStep > 0 ? '上一项' : '返回'}
+                  {currentStep > 0 ? PAGE_TEXT.navigation.previous : PAGE_TEXT.navigation.back}
                 </Button>
-                
+
                 <Button onClick={handleSaveImprovement}>
-                  {currentStep < improvements.length - 1 ? '保存并继续' : '完成优化'}
+                  {currentStep < improvements.length - 1 ? PAGE_TEXT.navigation.saveAndContinue : PAGE_TEXT.navigation.complete}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -153,12 +154,12 @@ export const Crucible = () => {
             // 如果没有需要优化的项目或全部完成
             <Card className="p-6 text-center">
               <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
-              <h2 className="text-xl font-semibold mb-2">全部优化完成!</h2>
+              <h2 className="text-xl font-semibold mb-2">{PAGE_TEXT.completion.title}</h2>
               <p className="text-muted-foreground mb-6">
-                您已成功完成所有改进项目，点击下方按钮查看优化效果。
+                {PAGE_TEXT.completion.subtitle}
               </p>
               <Button onClick={() => handleComplete(improvements.map(imp => imp.improved))}>
-                查看优化结果
+                {PAGE_TEXT.completion.viewResults}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Card>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Target } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import prismLogo from '@/assets/极简logo.jpg';
 
 interface ResumeRendererProps {
@@ -42,7 +44,11 @@ export const ResumeRenderer: React.FC<ResumeRendererProps> = ({
           {/* 简历内容 */}
           <div className="resume-preview bg-slate-900 p-8">
             <div className="prose prose-sm max-w-none prose-invert">
-              <ReactMarkdown>{content}</ReactMarkdown>
+              <ReactMarkdown
+                rehypePlugins={[rehypeRaw, rehypeSanitize]}
+              >
+                {content}
+              </ReactMarkdown>
             </div>
           </div>
         </div>
@@ -97,6 +103,45 @@ export const ResumeRenderer: React.FC<ResumeRendererProps> = ({
 
         .resume-preview .prose em {
           color: #e2e8f0 !important;
+        }
+
+        /* 自定义HTML类样式 */
+        .resume-preview .contact-info {
+          background: rgba(148, 163, 184, 0.1);
+          border: 1px solid rgba(148, 163, 184, 0.2);
+          border-radius: 8px;
+          padding: 1rem;
+          margin: 1rem 0;
+        }
+
+        .resume-preview .skills-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          margin: 1rem 0;
+        }
+
+        .resume-preview .skill-category {
+          background: rgba(59, 130, 246, 0.1);
+          border: 1px solid rgba(59, 130, 246, 0.2);
+          border-radius: 6px;
+          padding: 0.75rem;
+        }
+
+        .resume-preview .status-accepted {
+          color: #10b981 !important;
+          font-weight: 600 !important;
+        }
+
+        .resume-preview .status-under-review {
+          color: #f59e0b !important;
+          font-weight: 600 !important;
+        }
+
+        @media (max-width: 768px) {
+          .resume-preview .skills-grid {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </>
