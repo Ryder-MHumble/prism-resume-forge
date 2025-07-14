@@ -164,6 +164,25 @@ All colors MUST be HSL.
   /* 数字滚动 */
   .number-roll {
     animation: number-roll 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 0 20px currentColor;
+  }
+
+  /* 神经元脉冲效果 */
+  .neural-pulse:hover {
+    animation: cyber-pulse 0.6s ease-in-out;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  }
+
+  @keyframes cyber-pulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+    }
   }
 
   /* 打字机效果 */
@@ -213,6 +232,194 @@ All colors MUST be HSL.
     transform: translateY(-20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
+
+  /* 现代化动画效果 */
+  .animate-fade-in {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    animation: elegant-fade-in 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-float {
+    animation: enhanced-float 6s ease-in-out infinite;
+  }
+
+  .animate-scan {
+    animation: scan-line 2s linear infinite;
+  }
+
+  /* 科幻辉光效果 */
+  .sci-fi-glow {
+    box-shadow:
+      0 0 20px hsl(var(--primary) / 0.3),
+      0 0 40px hsl(var(--primary) / 0.1),
+      inset 0 1px 0 hsl(var(--primary) / 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .sci-fi-glow:hover {
+    box-shadow:
+      0 0 30px hsl(var(--primary) / 0.5),
+      0 0 60px hsl(var(--primary) / 0.2),
+      inset 0 1px 0 hsl(var(--primary) / 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* 现代卡片效果 */
+  .modern-card {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card) / 0.8) 0%,
+      hsl(var(--card) / 0.4) 100%
+    );
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .modern-card:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 40px hsl(var(--primary) / 0.1),
+      0 0 0 1px hsl(var(--primary) / 0.2);
+  }
+
+  /* 脉冲边框效果 */
+  .pulse-border {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pulse-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      hsl(var(--primary) / 0.5),
+      transparent
+    );
+    border-radius: inherit;
+    animation: pulse-rotate 3s linear infinite;
+    z-index: -1;
+  }
+
+  .pulse-border::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--background));
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  /* 控制台卡片效果 */
+  .console-card {
+    @apply bg-card/20 backdrop-blur-sm border border-border/30 rounded-lg;
+    @apply transition-all duration-300 hover:border-primary/30 hover:bg-card/30;
+  }
+
+  /* HUD界面动画 */
+  .animate-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: hud-fade-in 0.8s ease-out forwards;
+  }
+
+  /* 扫描线效果 */
+  .scan-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scan-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
+    animation: scan-sweep 3s linear infinite;
+  }
+
+  /* 脉冲边框 */
+  .pulse-border {
+    position: relative;
+  }
+
+  .pulse-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      hsl(var(--primary) / 0.3),
+      transparent
+    );
+    border-radius: inherit;
+    z-index: -1;
+    animation: border-pulse 2s linear infinite;
+  }
+
+  /* 全息投影效果 */
+  .hologram {
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.1) 0%,
+      transparent 50%,
+      hsl(var(--secondary) / 0.1) 100%
+    );
+    backdrop-filter: blur(20px);
+  }
+
+  .hologram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--primary) / 0.03) 2px,
+      hsl(var(--primary) / 0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* 隐藏滚动条的实用类 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  /* 新增高级动画效果 */
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* 卡片悬停效果 */
+  .group:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
 }
 
 @layer utilities {
@@ -246,6 +453,11 @@ All colors MUST be HSL.
 
   .bg-gradient-radial {
     background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* 文字阴影效果，确保在背景特效上的可读性 */
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -283,10 +495,22 @@ All colors MUST be HSL.
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
-  25% { transform: translateY(-20px) rotate(90deg); opacity: 0.8; }
-  50% { transform: translateY(-10px) rotate(180deg); opacity: 1; }
-  75% { transform: translateY(-15px) rotate(270deg); opacity: 0.6; }
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-5px) translateX(-3px);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-8px) translateX(2px);
+    opacity: 0.7;
+  }
 }
 
 @keyframes fadeIn {
@@ -315,4 +539,322 @@ All colors MUST be HSL.
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.5);
+}
+/* 新增关键帧动画 */
+@keyframes modern-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modern-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-20px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-8px) rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-15px) rotate(270deg);
+    opacity: 0.6;
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 现代化渐变背景 */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* 玻璃态效果 */
+.glass-effect {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background) / 0.1) 0%,
+    hsl(var(--background) / 0.05) 100%
+  );
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--border) / 0.2);
+}
+
+/* HUD专用动画 */
+@keyframes hud-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes scan-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes border-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes hologram-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+  75% { opacity: 0.9; }
+}
+
+/* 控制台样式 */
+.console-text {
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: status-blink 2s infinite;
+}
+
+@keyframes status-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+@keyframes smooth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes enhanced-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-20px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-8px) rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-15px) rotate(270deg);
+    opacity: 0.6;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+@keyframes elegant-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(10px);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(8px) scale(0.98);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* 简历预览自定义样式 - 赛博朋克主题 */
+.custom-resume-styles .prose h1 {
+  font-size: 2rem !important;
+  font-weight: bold !important;
+  border-bottom: 2px solid #06b6d4 !important;
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 1rem !important;
+  color: #67e8f9 !important;
+  text-shadow: 0 0 10px rgba(103, 232, 249, 0.5) !important;
+}
+
+.custom-resume-styles .prose h2 {
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  border-bottom: 2px solid #10b981 !important;
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 1rem !important;
+  color: #34d399 !important;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.4) !important;
+}
+
+.custom-resume-styles .prose h3 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+  color: #a78bfa !important;
+  text-shadow: 0 0 6px rgba(167, 139, 250, 0.3) !important;
+}
+
+.custom-resume-styles .prose p {
+  line-height: 1.7 !important;
+  margin-bottom: 0.75rem !important;
+  color: #e2e8f0 !important;
+}
+
+.custom-resume-styles .prose ul,
+.custom-resume-styles .prose ol {
+  color: #e2e8f0 !important;
+}
+
+.custom-resume-styles .prose li {
+  color: #e2e8f0 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.custom-resume-styles .prose strong {
+  color: #fbbf24 !important;
+  font-weight: 600 !important;
+  text-shadow: 0 0 4px rgba(251, 191, 36, 0.3) !important;
+}
+
+.custom-resume-styles .prose em {
+  color: #f472b6 !important;
+}
+
+/* 自定义滚动条 - 赛博朋克风格 */
+.custom-resume-styles::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-resume-styles::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+}
+
+.custom-resume-styles::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #06b6d4, #10b981);
+  border-radius: 4px;
+}
+
+.custom-resume-styles::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0891b2, #059669);
+}
+
+/* Dashboard专用简历预览样式 */
+.resume-preview {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+}
+
+.resume-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(6, 182, 212, 0.03) 2px,
+    rgba(6, 182, 212, 0.03) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* 自定义滚动条 - 赛博朋克风格 */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #06b6d4, #10b981);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0891b2, #059669);
+}
+
+/* 悬停时的简历预览增强效果 */
+.resume-preview:hover {
+  box-shadow:
+    0 0 20px rgba(6, 182, 212, 0.15),
+    0 0 40px rgba(16, 185, 129, 0.1),
+    inset 0 1px 0 rgba(6, 182, 212, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* 确保与Revelation页面保持视觉一致性 */
+.resume-preview .custom-resume-styles {
+  position: relative;
+  z-index: 1;
 }

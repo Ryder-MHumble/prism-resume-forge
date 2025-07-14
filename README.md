@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# 棱镜 AI - Prism AI Resume Analyzer
 
-## Project info
+> 🔮 下一代AI驱动的智能简历分析系统
 
-**URL**: https://lovable.dev/projects/4e1b614d-9c9b-42fb-ae96-81f78aebf09a
+一个基于先进AI技术的简历分析与优化平台，通过深度学习算法为求职者提供精准的简历评估、弱点识别和优化建议。
 
-## How can I edit this code?
+## ✨ 核心功能
 
-There are several ways of editing your application.
+### 🎯 智能分析引擎
+- **AI驱动分析**：运用先进的自然语言处理技术深度解析简历内容
+- **多维度评估**：从技术能力、项目经验、表达能力等六个维度进行全面评分
+- **精准匹配**：支持职位描述(JD)上传，提供针对性的匹配度分析
 
-**Use Lovable**
+### 📊 可视化报告
+- **雷达图展示**：直观呈现各维度能力分布
+- **实时评分**：动态计算综合评分，提供即时反馈
+- **弱点扫描**：智能识别简历中的问题点和改进空间
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4e1b614d-9c9b-42fb-ae96-81f78aebf09a) and start prompting.
+### 🔧 优化工作坊
+- **能力炼金屋**：交互式的简历优化环节
+- **个性化建议**：基于分析结果提供定制化的改进方案
+- **成果展示**：优化前后对比，量化提升效果
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 技术特色
 
-**Use your preferred IDE**
+### 🎨 现代化UI设计
+- **科幻风格界面**：采用深空棱镜主题，营造专业的技术氛围
+- **流畅动画效果**：丰富的过渡动画和视觉反馈
+- **响应式设计**：完美适配桌面和移动端
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### ⚡ 高性能架构
+- **React 18**：使用最新的React特性，确保最佳性能
+- **TypeScript**：完整的类型安全，提升开发效率和代码质量
+- **Vite**：极速的开发构建体验
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠️ 技术栈
 
-Follow these steps:
+### 前端框架
+- **React 18** - 用户界面构建
+- **TypeScript** - 类型安全的JavaScript
+- **Vite** - 下一代前端构建工具
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### UI & 样式
+- **Tailwind CSS** - 原子化CSS框架
+- **shadcn/ui** - 现代化组件库
+- **Radix UI** - 无样式组件基础库
+- **Lucide React** - 精美的图标库
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 状态管理 & 路由
+- **React Query** - 服务端状态管理
+- **React Router** - 客户端路由
+- **Context API** - 应用级状态管理
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 数据可视化
+- **Recharts** - React图表库
+- **自定义SVG组件** - 雷达图等定制化图表
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## 📁 项目结构
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4e1b614d-9c9b-42fb-ae96-81f78aebf09a) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

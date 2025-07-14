@@ -5,6 +5,7 @@ import { Crucible } from './Crucible';
 import { Revelation } from './Revelation';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
 import { useToast } from '@/hooks/use-toast';
+import { sampleDashboardData, sampleWeaknessItems, sampleRevelationData } from '@/data/sampleData';
 
 type AppState = 'portal' | 'dashboard' | 'crucible' | 'revelation';
 
@@ -18,66 +19,6 @@ const Index = () => {
   const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('hardcore');
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({});
   const { toast } = useToast();
-
-  // 模拟数据
-  const mockDashboardData = {
-    score: 78,
-    mode: analysisMode,
-    comment: analysisMode === 'hardcore' 
-      ? "78/100. Solid foundation, but your resume reads like a shopping list. Time to tell a story that sells." 
-      : "78/100. Great foundation! You have valuable experience. Let's polish your presentation to truly showcase your strengths.",
-    radarData: [
-      { category: '技术能力', value: 85, maxValue: 100 },
-      { category: '项目经验', value: 72, maxValue: 100 },
-      { category: '团队合作', value: 68, maxValue: 100 },
-      { category: '表达能力', value: 75, maxValue: 100 },
-      { category: '专业知识', value: 88, maxValue: 100 },
-      { category: '项目价值', value: 65, maxValue: 100 },
-    ],
-    weaknesses: [
-      {
-        id: 'weak-1',
-        title: '项目4] 描述中缺少可量化的成果',
-        description: '项目成果描述过于模糊，缺乏具体的数据和指标',
-        severity: 'high' as const,
-        category: '成果量化',
-        impact: '影响面试官对项目价值的判断'
-      },
-      {
-        id: 'weak-2', 
-        title: '"精通XX"为无效描述，需具体化',
-        description: '技能描述过于宽泛，缺乏具体的应用场景和深度',
-        severity: 'medium' as const,
-        category: '技能描述',
-        impact: '降低技能可信度'
-      },
-      {
-        id: 'weak-3',
-        title: '项目4] 描述中缺少技术难点',
-        description: '未体现解决的技术挑战和创新点',
-        severity: 'high' as const,
-        category: '技术深度',
-        impact: '无法展现技术水平'
-      },
-      {
-        id: 'weak-4',
-        title: '"精通XX"为无效描述，需具体化',
-        description: '重复出现的问题，需要系统性优化',
-        severity: 'medium' as const,
-        category: '表达规范',
-        impact: '影响专业度'
-      }
-    ],
-    resumeContent: `作为一名有着丰富经验的软件工程师，我专注于全栈开发和系统架构设计。
-
-在过去的工作中，我参与了多个大型项目的开发和维护，积累了丰富的实战经验。
-
-我精通多种编程语言，包括JavaScript、Python、Java等，同时熟悉各种主流框架和工具。
-
-在团队协作方面，我具备良好的沟通能力和项目管理经验，能够有效地推动项目进度。
-
-我致力于持续学习新技术，保持技术的前瞻性和创新性，为团队和项目创造更大的价值。`
-  };
 
   const handleStartAnalysis = (files: UploadedFiles, mode: AnalysisMode) => {
     setUploadedFiles(files);
@@ -128,7 +69,7 @@ const Index = () => {
       case 'dashboard':
         return (
           <Dashboard
-            data={mockDashboardData}
+            data={sampleDashboardData}
             onBack={handleBackToPortal}
             onOptimizeWeakness={handleOptimizeWeakness}
           />
@@ -138,7 +79,7 @@ const Index = () => {
           <Crucible
             onBack={() => setAppState('dashboard')}
             onComplete={handleCrucibleComplete}
-            weaknesses={mockDashboardData.weaknesses}
+            weaknesses={sampleWeaknessItems}
           />
         );
       case 'revelation':
@@ -146,58 +87,10 @@ const Index = () => {
           <Revelation
             onBack={() => setAppState('crucible')}
             onBackToPortal={handleBackToPortal}
-            originalScore={mockDashboardData.score}
-            newScore={95}
-            optimizedResume={`# Ryder Sun - 高级软件工程师
-
-## 个人信息
-- 邮箱: xxx@gmail.com
-- 电话: +86 138-0000-0000
-- 深度挖掘你的潜力，重塑你的简历
-
-## 专业技能
-### 编程语言
-- JavaScript/TypeScript: 5年开发经验，熟练掌握ES6+特性
-- Python: 3年经验，专长于数据处理和机器学习
-- Java: 4年企业级开发经验
-
-### 框架与工具
-- React.js: 构建过10+个大型SPA应用
-- Node.js: 负责过多个微服务架构项目
-- Docker: 容器化部署经验，提升部署效率60%
-
-## 项目经验
-### 项目A - 企业级CRM系统 (2023.01 - 2023.08)
-**角色**: 前端技术负责人
-**成果**: 
-- 带领5人团队完成系统重构，性能提升40%
-- 日活用户从500增长至2000+
-- 用户满意度提升至4.8/5.0
-
-### 项目B - 数据可视化平台 (2022.06 - 2022.12)
-**技术栈**: React + D3.js + Python
-**核心贡献**:
-- 独立设计并实现交互式图表组件
-- 处理TB级数据渲染，响应时间控制在200ms内
-- 为公司节省数据分析成本30万/年
-
-## 工作经历
-### ABC科技有限公司 - 高级前端工程师 (2021.03 至今)
-- 负责公司核心产品前端架构设计与开发
-- 建立前端代码规范，团队开发效率提升25%
-- 指导3名初级工程师，获得团队"最佳导师"称号
-
-## 教育背景
-### 重点大学 - 计算机科学与技术 (2017.09 - 2021.06)
-- GPA: 3.8/4.0
-- 核心课程: 数据结构、算法设计、软件工程
-- 获得国家励志奖学金`}
-            completedImprovements={[
-              '修改项1: 量化了项目成果数据',
-              '修改项2: 具体化了技能描述',
-              '修改项3: 补充了技术难点说明',
-              '修改项4: 规范了表达方式'
-            ]}
+            originalScore={sampleRevelationData.originalScore}
+            newScore={sampleRevelationData.newScore}
+            optimizedResume={sampleRevelationData.optimizedResume}
+            completedImprovements={sampleRevelationData.completedImprovements}
           />
         );
       default:
