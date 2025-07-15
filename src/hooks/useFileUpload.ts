@@ -1,105 +1,101 @@
-import { useState, useCallback } from 'react';
-import { UploadedFiles, DragState, FileValidationResult } from '@/types';
-import { validateFileType, processDraggedFiles, isResumeFile, isJDFile } from '@/services/fileService';
+import { useState, useEffect, useCallback } from 'react';
+import { FILE_VALIDATION, ANIMATION_CONFIG } from '@/constants/portal';
 
-export const useFileUpload = (initialFiles: UploadedFiles = {}) => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>(initialFiles);
-  const [dragState, setDragState] = useState<DragState>({ resume: false, jd: false });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+export type FileType = 'resume' | 'jd';
+export type UploadedFiles = { resume?: File; jd?: File };
+export type DragState = { resume: boolean; jd: boolean };
+export type ActivePanel = 'upload' | 'ready';
 
-  // 处理文件选择
-  const handleFileSelect = useCallback((file: File, type: 'resume' | 'jd') => {
-    const validation = validateFileType(file, type);
+interface UseFileUploadReturn {
+  uploadedFiles: UploadedFiles;
+  isDragOver: DragState;
+  activePanel: ActivePanel;
+  setUploadedFiles: React.Dispatch<React.SetStateAction<UploadedFiles>>;
+  setActivePanel: React.Dispatch<React.SetStateAction<ActivePanel>>;
+  handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>, type: FileType) => void;
+  handleDragOver: (e: React.DragEvent, type: FileType) => void;
+  handleDragLeave: (e: React.DragEvent, type: FileType) => void;
+  handleDrop: (e: React.DragEvent, type: FileType) => void;
+  isValidFile: (file: File, type: FileType) => boolean;
+  canStartAnalysis: boolean;
+}
 
-    if (!validation.isValid) {
-      setErrors(prev => ({ ...prev, [type]: validation.error || '文件验证失败' }));
-      return false;
+export const useFileUpload = (): UseFileUploadReturn => {
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({});
+  const [isDragOver, setIsDragOver] = useState<DragState>({ resume: false, jd: false });
+  const [activePanel, setActivePanel] = useState<ActivePanel>('upload');
+
+  // 自动跳转逻辑
+  useEffect(() => {
+    if (uploadedFiles.resume && uploadedFiles.jd) {
+      setTimeout(() => {
+        setActivePanel('ready');
+      }, ANIMATION_CONFIG.panelSwitchDelay);
+    } else if (!uploadedFiles.resume && !uploadedFiles.jd) {
+      setActivePanel('upload');
     }
+  }, [uploadedFiles.resume, uploadedFiles.jd]);
 
-    setUploadedFiles(prev => ({ ...prev, [type]: file }));
-    setErrors(prev => ({ ...prev, [type]: '' }));
-    return true;
+  // 文件类型验证
+  const isValidFile = useCallback((file: File, type: FileType): boolean => {
+    const config = FILE_VALIDATION[type];
+
+    return config.types.some(fileType => file.type.includes(fileType)) ||
+           config.extensions.some(ext => file.name.toLowerCase().endsWith(ext));
   }, []);
 
-  // 处理文件移除
-  const handleFileRemove = useCallback((type: 'resume' | 'jd') => {
-    setUploadedFiles(prev => {
-      const newFiles = { ...prev };
-      delete newFiles[type];
-      return newFiles;
-    });
-    setErrors(prev => ({ ...prev, [type]: '' }));
-  }, []);
-
-  // 拖拽相关处理函数
-  const handleDragOver = useCallback((e: React.DragEvent, type: 'resume' | 'jd') => {
+  // 拖拽处理
+  const handleDragOver = useCallback((e: React.DragEvent, type: FileType) => {
     e.preventDefault();
-    setDragState(prev => ({ ...prev, [type]: true }));
+    setIsDragOver(prev => ({ ...prev, [type]: true }));
   }, []);
 
-  const handleDragLeave = useCallback((e: React.DragEvent, type: 'resume' | 'jd') => {
+  const handleDragLeave = useCallback((e: React.DragEvent, type: FileType) => {
     e.preventDefault();
-    setDragState(prev => ({ ...prev, [type]: false }));
+    setIsDragOver(prev => ({ ...prev, [type]: false }));
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent, type: 'resume' | 'jd') => {
+  const handleDrop = useCallback((e: React.DragEvent, type: FileType) => {
     e.preventDefault();
-    setDragState(prev => ({ ...prev, [type]: false }));
+    setIsDragOver(prev => ({ ...prev, [type]: false }));
 
     const files = Array.from(e.dataTransfer.files);
-    const targetFile = files.find(file =>
-      type === 'resume' ? isResumeFile(file) : isJDFile(file)
-    );
+    const targetFile = files.find(file => isValidFile(file, type));
 
     if (targetFile) {
-      handleFileSelect(targetFile, type);
+      setUploadedFiles(prev => ({ ...prev, [type]: targetFile }));
     }
-  }, [handleFileSelect]);
+  }, [isValidFile]);
 
-  // 批量处理拖拽文件
-  const handleBatchDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragState({ resume: false, jd: false });
+  // 文件选择处理
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>, type: FileType) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (isValidFile(file, type)) {
+        setUploadedFiles(prev => ({ ...prev, [type]: file }));
+      } else {
+        const typeNames = { resume: '简历', jd: 'JD' };
+        const config = FILE_VALIDATION[type];
+        alert(`不支持的文件格式。${typeNames[type]}文件支持的格式：${config.extensions.join(', ')}`);
+      }
+    }
+    // 重置input值，允许重复选择同一文件
+    e.target.value = '';
+  }, [isValidFile]);
 
-    const newFiles = processDraggedFiles(e.dataTransfer.files, uploadedFiles);
-    setUploadedFiles(newFiles);
-  }, [uploadedFiles]);
-
-  // 清空所有文件
-  const clearAllFiles = useCallback(() => {
-    setUploadedFiles({});
-    setErrors({});
-  }, []);
-
-  // 获取文件信息
-  const getFileInfo = useCallback((type: 'resume' | 'jd') => {
-    const file = uploadedFiles[type];
-    if (!file) return null;
-
-    return {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: file.lastModified
-    };
-  }, [uploadedFiles]);
-
-  // 检查是否可以开始分析
-  const canStartAnalysis = uploadedFiles.resume !== undefined;
+  const canStartAnalysis = !!uploadedFiles.resume;
 
   return {
     uploadedFiles,
-    dragState,
-    errors,
-    canStartAnalysis,
+    isDragOver,
+    activePanel,
+    setUploadedFiles,
+    setActivePanel,
     handleFileSelect,
-    handleFileRemove,
     handleDragOver,
     handleDragLeave,
     handleDrop,
-    handleBatchDrop,
-    clearAllFiles,
-    getFileInfo,
-    setUploadedFiles
+    isValidFile,
+    canStartAnalysis
   };
 };
