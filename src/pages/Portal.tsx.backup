@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, Info, LogIn, Upload, Zap, Brain, Shield, Database, FileText, Briefcase, Heart, Settings } from 'lucide-react';
-// 新增 AnalysisModeSelector
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { AnalysisModeSelector } from '@/components/ui/AnalysisModeSelector';
 import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { cn } from '@/lib/utils';
 // 导入logo
@@ -13,10 +11,6 @@ import prismLogo from '@/assets/极简logo.jpg';
 import saiboLogo from '@/assets/赛博logo.jpg';
 import prismBgLogo from '@/assets/Prism-Logo.png';
 import { useNavigate } from 'react-router-dom';
-
-interface PortalProps {
-  onStartAnalysis: (files: { resume?: File; jd?: File }, mode: AnalysisMode) => void;
-}
 
 export const Portal = () => {
   const navigate = useNavigate();
@@ -308,7 +302,7 @@ export const Portal = () => {
                           <div className="text-sm text-muted-foreground/70 font-medium">
                             棱镜核心理念
                           </div>
-                          <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+                          <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
                         </div>
                       </div>
                     </div>
@@ -467,18 +461,28 @@ export const Portal = () => {
 
                         {/* 粒子效果 */}
                         <div className="absolute inset-0 opacity-60">
-                          {[...Array(6)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute w-1 h-1 bg-primary rounded-full animate-pulse opacity-40"
-                              style={{
-                                left: `${15 + Math.random() * 70}%`,
-                                top: `${15 + Math.random() * 70}%`,
-                                animationDelay: `${i * 0.4}s`,
-                                animationDuration: `${2 + Math.random()}s`
-                              }}
-                            />
-                          ))}
+                          {[...Array(6)].map((_, i) => {
+                            const positions = [
+                              { left: '20%', top: '25%' },
+                              { left: '60%', top: '15%' },
+                              { left: '35%', top: '45%' },
+                              { left: '75%', top: '30%' },
+                              { left: '25%', top: '60%' },
+                              { left: '55%', top: '75%' }
+                            ];
+                            return (
+                              <div
+                                key={i}
+                                className="absolute w-1 h-1 bg-primary rounded-full animate-pulse opacity-40"
+                                style={{
+                                  left: positions[i].left,
+                                  top: positions[i].top,
+                                  animationDelay: `${i * 0.4}s`,
+                                  animationDuration: `${2 + (i % 3)}s`
+                                }}
+                              />
+                            );
+                          })}
                         </div>
 
                         {/* 角落装饰 */}
@@ -593,8 +597,6 @@ export const Portal = () => {
                         <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-purple-400/40 to-transparent" />
                         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400/40 to-transparent" />
 
-
-
                         {/* 粒子效果 */}
                         <div className="absolute inset-0 opacity-50">
                           {[...Array(4)].map((_, i) => (
@@ -602,10 +604,10 @@ export const Portal = () => {
                               key={i}
                               className="absolute w-0.5 h-0.5 bg-secondary rounded-full animate-pulse opacity-60"
                               style={{
-                                left: `${20 + Math.random() * 60}%`,
-                                top: `${20 + Math.random() * 60}%`,
+                                left: `${20 + i * 15}%`,
+                                top: `${20 + i * 15}%`,
                                 animationDelay: `${i * 0.6}s`,
-                                animationDuration: `${2.5 + Math.random()}s`
+                                animationDuration: `${2.5 + i * 0.5}s`
                               }}
                             />
                           ))}
@@ -675,7 +677,6 @@ export const Portal = () => {
                         className="hidden"
                       />
                     </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -701,32 +702,294 @@ export const Portal = () => {
 
                     {/* 主要内容区域 */}
                     <div className="flex-1 relative z-10">
-                      <AnalysisModeSelector
-                        value={analysisMode}
-                        onChange={setAnalysisMode}
-                      />
-                    </div>
+                      {/* 解析风格标题 */}
+                      <div className="mb-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-6 h-6 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-lg flex items-center justify-center">
+                            <Settings className="w-4 h-4 text-primary" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-foreground">解析风格</h3>
+                        </div>
+                      </div>
 
-                    {/* 右下角开始分析按钮 */}
-                    <div className="relative z-10 flex justify-end mt-6">
-                      <Button
-                        onClick={handleStartAnalysis}
-                        disabled={!canStartAnalysis}
-                        size="lg"
-                        className={cn(
-                          "px-8 h-12 text-base font-semibold",
-                          "bg-gradient-to-r from-primary to-secondary",
-                          "hover:from-primary/90 hover:to-secondary/90",
-                          "disabled:opacity-50 disabled:cursor-not-allowed",
-                          "transition-all duration-300 transform hover:scale-[1.02]",
-                          "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30",
-                          "border border-primary/30"
-                        )}
-                      >
-                        <Database className="w-5 h-5 mr-3" />
-                        <span>{canStartAnalysis ? '开始光谱分析' : '请先上传简历'}</span>
-                        {canStartAnalysis && <ArrowRight className="w-5 h-5 ml-3" />}
-                      </Button>
+                      {/* 浏览器标签页容器 */}
+                      <div className="relative">
+                        {/* 标签页按钮容器 */}
+                        <div className="relative flex">
+                          {/* 严苛模式标签 */}
+                          <div className="relative">
+                            <button
+                              onClick={() => setAnalysisMode('hardcore')}
+                              className={cn(
+                                "relative px-6 py-3 font-medium transition-all duration-300",
+                                "rounded-t-2xl backdrop-blur-md border-2 border-b-0",
+                                "hover:scale-[1.02] transform-origin-bottom",
+                                analysisMode === 'hardcore'
+                                  ? "bg-primary/15 border-primary text-primary shadow-lg shadow-primary/10 z-30"
+                                  : "bg-muted/5 border-border/30 text-muted-foreground hover:border-primary/20 hover:text-primary/70 hover:bg-primary/5 z-10"
+                              )}
+                            >
+                              严苛模式
+                            </button>
+
+                            {/* 左侧连接曲线 - 仅在严苛模式选中时显示 */}
+                            {analysisMode === 'hardcore' && (
+                              <div className="absolute -bottom-1 -left-4 w-4 h-4 z-20">
+                                <svg viewBox="0 0 16 16" className="w-full h-full">
+                                  <path
+                                    d="M0 16 Q0 0 16 0"
+                                    fill="none"
+                                    stroke="hsl(var(--primary))"
+                                    strokeWidth="2"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+
+                            {/* 右侧连接曲线 - 仅在严苛模式选中时显示 */}
+                            {analysisMode === 'hardcore' && (
+                              <div className="absolute -bottom-1 -right-4 w-4 h-4 z-20">
+                                <svg viewBox="0 0 16 16" className="w-full h-full">
+                                  <path
+                                    d="M16 16 Q16 0 0 0"
+                                    fill="none"
+                                    stroke="hsl(var(--primary))"
+                                    strokeWidth="2"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* 间隙 */}
+                          <div className="w-2" />
+
+                          {/* 鼓励模式标签 */}
+                          <div className="relative">
+                            <button
+                              onClick={() => setAnalysisMode('supportive')}
+                              className={cn(
+                                "relative px-6 py-3 font-medium transition-all duration-300",
+                                "rounded-t-2xl backdrop-blur-md border-2 border-b-0",
+                                "hover:scale-[1.02] transform-origin-bottom",
+                                analysisMode === 'supportive'
+                                  ? "bg-secondary/15 border-secondary text-secondary shadow-lg shadow-secondary/10 z-30"
+                                  : "bg-muted/5 border-border/30 text-muted-foreground hover:border-secondary/20 hover:text-secondary/70 hover:bg-secondary/5 z-10"
+                              )}
+                            >
+                              鼓励模式
+                            </button>
+
+                            {/* 左侧连接曲线 - 仅在鼓励模式选中时显示 */}
+                            {analysisMode === 'supportive' && (
+                              <div className="absolute -bottom-1 -left-4 w-4 h-4 z-20">
+                                <svg viewBox="0 0 16 16" className="w-full h-full">
+                                  <path
+                                    d="M0 16 Q0 0 16 0"
+                                    fill="none"
+                                    stroke="hsl(var(--secondary))"
+                                    strokeWidth="2"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+
+                            {/* 右侧连接曲线 - 仅在鼓励模式选中时显示 */}
+                            {analysisMode === 'supportive' && (
+                              <div className="absolute -bottom-1 -right-4 w-4 h-4 z-20">
+                                <svg viewBox="0 0 16 16" className="w-full h-full">
+                                  <path
+                                    d="M16 16 Q16 0 0 0"
+                                    fill="none"
+                                    stroke="hsl(var(--secondary))"
+                                    strokeWidth="2"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* 下方：内容区域 - 根据选中标签动态调整圆角 */}
+                        <div
+                          className={cn(
+                            "relative border-2 p-8 backdrop-blur-md overflow-hidden transition-all duration-500 z-10",
+                            // 根据选中的模式动态调整圆角
+                            analysisMode === 'hardcore'
+                              ? "rounded-3xl rounded-tl-none border-primary bg-primary/5"
+                              : "rounded-3xl rounded-tr-none border-secondary bg-secondary/5"
+                          )}
+                          style={{
+                            // 确保内容区域与选中标签完美对齐
+                            marginTop: '-1px'
+                          }}
+                        >
+                        {/* 背景装饰 - 根据模式动态变化 */}
+                        <div className="absolute inset-0 pointer-events-none">
+                          {analysisMode === 'hardcore' ? (
+                            <>
+                              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
+                              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+                              <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-primary/40 to-transparent" />
+                              <div className="absolute bottom-8 right-8 w-20 h-20 opacity-15">
+                                <Zap className="w-full h-full text-primary" />
+                              </div>
+                              {/* 粒子效果 */}
+                              <div className="absolute inset-0">
+                                {[...Array(4)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="absolute w-1 h-1 bg-primary rounded-full animate-pulse opacity-60"
+                                    style={{
+                                      left: `${20 + i * 20}%`,
+                                      top: `${15 + i * 25}%`,
+                                      animationDelay: `${i * 0.5}s`,
+                                      animationDuration: '2s'
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent" />
+                              <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-secondary/40 to-transparent" />
+                              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                              <div className="absolute bottom-8 right-8 w-20 h-20 opacity-15">
+                                <Heart className="w-full h-full text-secondary" />
+                              </div>
+                              {/* 粒子效果 */}
+                              <div className="absolute inset-0">
+                                {[...Array(4)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="absolute w-1 h-1 bg-secondary rounded-full animate-pulse opacity-60"
+                                    style={{
+                                      left: `${25 + i * 18}%`,
+                                      top: `${20 + i * 20}%`,
+                                      animationDelay: `${i * 0.7}s`,
+                                      animationDuration: '2.5s'
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                        {/* 边框样式 */}
+                        <div className={cn(
+                          "absolute inset-0 rounded-3xl border-2 transition-all duration-500",
+                          analysisMode === 'hardcore'
+                            ? "border-primary/30 shadow-lg shadow-primary/10"
+                            : "border-secondary/30 shadow-lg shadow-secondary/10"
+                        )} />
+
+                        {/* 内容区域 */}
+                        <div className="relative z-10 space-y-6">
+                          {/* 模式标题 */}
+                          <div className="flex items-center gap-4">
+                            <div className={cn(
+                              "p-3 rounded-xl transition-all duration-500",
+                              analysisMode === 'hardcore'
+                                ? "bg-primary/20 text-primary"
+                                : "bg-secondary/20 text-secondary"
+                            )}>
+                              {analysisMode === 'hardcore' ? (
+                                <Zap className="w-6 h-6" />
+                              ) : (
+                                <Heart className="w-6 h-6" />
+                              )}
+                            </div>
+                            <div>
+                              <h3 className={cn(
+                                "text-2xl font-bold transition-all duration-500",
+                                analysisMode === 'hardcore' ? "text-primary" : "text-secondary"
+                              )}>
+                                {analysisMode === 'hardcore' ? '严苛模式' : '鼓励模式'}
+                              </h3>
+                              <p className="text-sm text-muted-foreground font-mono">
+                                {analysisMode === 'hardcore' ? 'Hardcore Mode' : 'Supportive Mode'}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 详细描述 */}
+                          <div className="space-y-4">
+                            <p className="text-base leading-relaxed text-muted-foreground">
+                              {analysisMode === 'hardcore'
+                                ? '模拟大厂面试官XXXX，会用直接的语言一针见血地指出你的问题，专业性很强的同时压力也很大。'
+                                : '扮演循循善诱的职业导师，聚焦优点，温和建议，帮助你以更加自信的方式展现自己的价值。'
+                              }
+                            </p>
+
+                            {/* 特点列表 */}
+                            <div className="grid grid-cols-2 gap-3 mt-4">
+                              {analysisMode === 'hardcore' ? (
+                                <>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-primary rounded-full" />
+                                    <span className="text-muted-foreground">直接尖锐</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-primary rounded-full" />
+                                    <span className="text-muted-foreground">问题导向</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-primary rounded-full" />
+                                    <span className="text-muted-foreground">高标准要求</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-primary rounded-full" />
+                                    <span className="text-muted-foreground">深度分析</span>
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-secondary rounded-full" />
+                                    <span className="text-muted-foreground">温和建议</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-secondary rounded-full" />
+                                    <span className="text-muted-foreground">优点导向</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-secondary rounded-full" />
+                                    <span className="text-muted-foreground">正向激励</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <div className="w-1 h-1 bg-secondary rounded-full" />
+                                    <span className="text-muted-foreground">信心提升</span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 右下角开始分析按钮 */}
+                      <div className="relative z-10 flex justify-end">
+                        <Button
+                          onClick={handleStartAnalysis}
+                          disabled={!canStartAnalysis}
+                          size="lg"
+                          className={cn(
+                            "px-8 h-12 text-base font-semibold",
+                            "bg-gradient-to-r from-primary to-secondary",
+                            "hover:from-primary/90 hover:to-secondary/90",
+                            "disabled:opacity-50 disabled:cursor-not-allowed",
+                            "transition-all duration-300 transform hover:scale-[1.02]",
+                            "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30",
+                            "border border-primary/30"
+                          )}
+                        >
+                          <Database className="w-5 h-5 mr-3" />
+                          <span>{canStartAnalysis ? '开始光谱分析' : '请先上传简历'}</span>
+                          {canStartAnalysis && <ArrowRight className="w-5 h-5 ml-3" />}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -837,7 +1100,7 @@ export const Portal = () => {
 
                       {/* 故障干扰线 */}
                       <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent animate-pulse"
-                        style={{ animationDuration: '0.15s' }} />
+                        style={{animationDuration: '0.15s'}} />
                     </div>
 
                     <p className="text-base text-muted-foreground/60 font-light">

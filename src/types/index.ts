@@ -19,13 +19,9 @@ export interface WeaknessItem {
   id: string;
   title: string;
   description: string;
-  severity: 'low' | 'medium' | 'high';
-  category: string;
   impact: string;
   suggestion: string;
   original: string;
-  lineStart: number;
-  lineEnd: number;
 }
 
 // 改进项目类型

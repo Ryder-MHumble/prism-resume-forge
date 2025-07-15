@@ -1,4 +1,4 @@
-import { ArrowRight, Eye, Target, AlertTriangle } from 'lucide-react';
+import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -7,8 +7,6 @@ interface WeaknessItem {
   id: string;
   title: string;
   description: string;
-  severity: 'low' | 'medium' | 'high';
-  category: string;
   impact: string;
 }
 
@@ -25,23 +23,6 @@ export const WeaknessScanner = ({
   onPreviewHighlight,
   className 
 }: WeaknessScannerProps) => {
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'high': return 'text-red-500 bg-red-500/10 border-red-500/30';
-      case 'medium': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/30';
-      case 'low': return 'text-blue-500 bg-blue-500/10 border-blue-500/30';
-      default: return 'text-muted-foreground bg-muted/10 border-muted/30';
-    }
-  };
-
-  const getSeverityIcon = (severity: string) => {
-    switch (severity) {
-      case 'high': return <AlertTriangle className="w-4 h-4" />;
-      case 'medium': return <Target className="w-4 h-4" />;
-      case 'low': return <Eye className="w-4 h-4" />;
-      default: return <Eye className="w-4 h-4" />;
-    }
-  };
 
   return (
     <Card className={cn("p-6", className)}>
@@ -87,22 +68,11 @@ export const WeaknessScanner = ({
                       {weakness.description}
                     </p>
                   </div>
-                  
-                  <div className={cn(
-                    "flex items-center gap-1 px-2 py-1 rounded-full text-xs border",
-                    getSeverityColor(weakness.severity)
-                  )}>
-                    {getSeverityIcon(weakness.severity)}
-                    <span className="capitalize">{weakness.severity}</span>
-                  </div>
                 </div>
 
                 {/* 详细信息 */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-xs">
-                    <span className="text-muted-foreground">
-                      分类: <span className="text-foreground">{weakness.category}</span>
-                    </span>
                     <span className="text-muted-foreground">
                       影响: <span className="text-foreground">{weakness.impact}</span>
                     </span>
@@ -131,25 +101,13 @@ export const WeaknessScanner = ({
 
         {/* 统计信息 */}
         <div className="border-t pt-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            {['high', 'medium', 'low'].map((severity) => {
-              const count = weaknesses.filter(w => w.severity === severity).length;
-              const label = severity === 'high' ? '严重' : severity === 'medium' ? '中等' : '轻微';
-              
-              return (
-                <div key={severity} className="space-y-1">
-                  <div className={cn(
-                    "text-2xl font-bold",
-                    getSeverityColor(severity).split(' ')[0]
-                  )}>
-                    {count}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {label}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-primary">
+              {weaknesses.length}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              待优化项目
+            </div>
           </div>
         </div>
       </div>

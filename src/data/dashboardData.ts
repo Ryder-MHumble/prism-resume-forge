@@ -3,24 +3,16 @@
 // 高亮部分示例数据（实际应用中应该根据扫描结果动态生成）
 export const HIGHLIGHTED_SECTIONS = {
   "project1": {
-    text: "[项目1] 描述中缺少可量化的...",
-    lineStart: 32,
-    lineEnd: 36
+    text: "[项目1] 描述中缺少可量化的..."
   },
   "skill1": {
-    text: "精通XX为无效描述，需具体化",
-    lineStart: 62,
-    lineEnd: 65
+    text: "精通XX为无效描述，需具体化"
   },
   "project2": {
-    text: "[项目2] 描述中缺少可量化的...",
-    lineStart: 39,
-    lineEnd: 43
+    text: "[项目2] 描述中缺少可量化的..."
   },
   "skill2": {
-    text: "精通XX为无效描述，需具体化",
-    lineStart: 66,
-    lineEnd: 70
+    text: "精通XX为无效描述，需具体化"
   },
 };
 

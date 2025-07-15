@@ -19,25 +19,17 @@ export const sampleDashboardData: DashboardData = {
       id: "project1",
       title: "[项目1] 描述中缺少可量化的成就",
       description: "项目描述应包含具体的数字和成果",
-      severity: 'medium' as const,
-      category: "表达能力",
       impact: "中等",
       suggestion: "添加具体的数据点，例如提升了多少效率，节省了多少成本等",
-      original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标",
-      lineStart: 45,
-      lineEnd: 47
+      original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标"
     },
     {
       id: "skill1",
       title: "技能描述过于笼统",
       description: "技能描述应该包含具体程度和应用场景",
-      severity: 'high' as const,
-      category: "技术能力",
       impact: "高",
       suggestion: "具体说明技能熟练程度和应用场景，避免简单列举",
-      original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3",
-      lineStart: 35,
-      lineEnd: 36
+      original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3"
     }
   ],
   resumeContent: resumeMarkdown
@@ -49,37 +41,25 @@ export const sampleWeaknessItems: WeaknessItem[] = [
     id: "project1",
     title: "[项目1] 描述中缺少可量化的成就",
     description: "项目描述应包含具体的数字和成果",
-    severity: 'medium' as const,
-    category: "项目经验",
-    impact: "影响评分 -8分",
-    original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标",
+    impact: "中等",
     suggestion: "添加具体的数据点，例如提升了多少效率，节省了多少成本等",
-    lineStart: 45,
-    lineEnd: 47
+    original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标"
   },
   {
     id: "skill1",
     title: "技能描述过于笼统",
     description: "技能描述应该包含具体程度和应用场景",
-    severity: 'high' as const,
-    category: "技术能力",
-    impact: "影响评分 -12分",
-    original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3",
+    impact: "高",
     suggestion: "具体说明技能熟练程度和应用场景，避免简单列举",
-    lineStart: 35,
-    lineEnd: 36
+    original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3"
   },
   {
     id: "project2",
     title: "[项目2] 缺少具体技术细节",
     description: "技术实现细节不够具体",
-    severity: 'low' as const,
-    category: "项目经验",
-    impact: "影响评分 -5分",
-    original: "参与电商平台的移动端重构项目，采用React Native技术栈",
+    impact: "轻微",
     suggestion: "详细说明你的技术贡献和解决的具体问题",
-    lineStart: 52,
-    lineEnd: 54
+    original: "参与电商平台的移动端重构项目，采用React Native技术栈"
   }
 ];
 

@@ -3,6 +3,8 @@ import { Portal } from '@/pages/Portal';
 import { Dashboard } from '@/pages/Dashboard';
 import { Crucible } from '@/pages/Crucible';
 import { Revelation } from '@/pages/Revelation';
+import { FileTextExtraction } from '@/pages/FileTextExtraction';
+import { LoaderTest } from '@/pages/LoaderTest';
 import NotFound from '@/pages/NotFound';
 
 export const AppRouter = () => {
@@ -13,6 +15,8 @@ export const AppRouter = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/crucible/:weaknessId?" element={<Crucible />} />
       <Route path="/revelation" element={<Revelation />} />
+      <Route path="/file-text-extraction" element={<FileTextExtraction />} />
+      <Route path="/loader-test" element={<LoaderTest />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

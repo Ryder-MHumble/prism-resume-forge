@@ -250,34 +250,7 @@ export const validateImprovementQuality = (
  * 获取改进建议
  */
 export const getImprovementSuggestions = (weakness: WeaknessItem): string[] => {
-  const suggestions: { [key: string]: string[] } = {
-    'work-experience': [
-      '使用STAR法则描述工作经历',
-      '量化工作成果和业绩',
-      '突出核心技能和责任',
-      '展示解决问题的能力'
-    ],
-    'technical-skills': [
-      '按技能熟练度分类展示',
-      '添加具体的项目经验',
-      '展示学习能力和适应性',
-      '关联实际应用场景'
-    ],
-    'education': [
-      '突出相关课程和项目',
-      '展示学术成就和荣誉',
-      '关联专业技能',
-      '体现持续学习能力'
-    ],
-    'project-experience': [
-      '详细描述项目背景和目标',
-      '强调个人贡献和角色',
-      '量化项目成果',
-      '展示技术栈和方法论'
-    ]
-  };
-
-  return suggestions[weakness.category] || [
+  return [
     '详细描述具体内容',
     '使用数据支撑观点',
     '突出个人价值',

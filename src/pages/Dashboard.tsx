@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar } from '@/components/ui/avatar';
 import { RadarChart } from '@/components/charts/RadarChart';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
+import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { resumeMarkdown } from '@/data/resumeExample';
@@ -36,9 +37,9 @@ interface DashboardData {
     id: string;
     title: string;
     description: string;
-    severity: 'low' | 'medium' | 'high';
-    category: string;
     impact: string;
+    suggestion: string;
+    original: string;
   }>;
   resumeContent: string;
 }
@@ -56,6 +57,7 @@ export const Dashboard = () => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [isAnalysisSummaryExpanded, setIsAnalysisSummaryExpanded] = useState(true);
   const [isRadarChartExpanded, setIsRadarChartExpanded] = useState(true);
+  const [expandedWeaknessId, setExpandedWeaknessId] = useState<string | null>(null);
 
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -98,7 +100,9 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="h-screen bg-background animate-in fade-in duration-700 overflow-hidden flex flex-col">
+    <div className="h-screen bg-background animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
+      {/* 赛博朋克背景特效 */}
+      <CyberpunkBackground intensity="low" className="opacity-30" />
       {/* 顶部导航 */}
       <header className="border-b border-border bg-background z-10 flex-shrink-0">
         <div className="container mx-auto px-4 py-3">
@@ -112,7 +116,12 @@ export const Dashboard = () => {
               {PAGE_TEXT.header.backButton}
             </Button>
 
-            <h1 className="text-xl font-semibold">{PAGE_TEXT.header.title}</h1>
+            <div>
+              <h1 className="text-xl font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                {PAGE_TEXT.header.title}
+              </h1>
+              <p className="text-xs text-muted-foreground">个人价值光谱分析仪</p>
+            </div>
 
             <div className="text-sm text-muted-foreground">
               {PAGE_TEXT.header.subtitle}
@@ -125,19 +134,26 @@ export const Dashboard = () => {
       <main className="container mx-auto px-4 py-6 flex-1 overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
           {/* 左侧区域 - 包含智能分析总结和简历渲染区 */}
-          <div className="md:col-span-7 space-y-3 animate-in slide-in-from-left duration-500 delay-100">
+          <div className="md:col-span-6 space-y-3 animate-in slide-in-from-left duration-500 delay-100">
             {/* 智能分析总结模块 - 重构版本 */}
             <div className="relative">
-              <Card className="relative border border-primary/20 rounded-xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
-                <div className="p-3 pb-2">
+              <Card className="relative border-2 border-primary/30 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 via-background/90 to-secondary/10 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-primary/50 backdrop-blur-md">
+                {/* 霓虹边框效果 */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/20 via-blue-500/20 to-purple-600/20 opacity-50 animate-pulse" />
+
+                {/* 顶部装饰线 */}
+                <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+                <div className="relative z-10 p-3 pb-3">
                   {/* 精简的标题区域 */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary/20 to-secondary/20 p-1">
-                        <img src={cyberLogo} alt="Prism Logo" className="w-full h-full object-cover rounded" />
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                        <div className="w-8 h-px bg-gradient-to-r from-cyan-400/50 to-transparent" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">
+                        <h3 className="text-sm font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                           {ANALYSIS_SUMMARY.title}
                         </h3>
                         <p className="text-xs text-muted-foreground/80">{ANALYSIS_SUMMARY.subtitle}</p>
@@ -240,94 +256,163 @@ export const Dashboard = () => {
           </div>
 
           {/* 右侧功能区 */}
-          <div className="md:col-span-3 animate-in slide-in-from-right duration-500 delay-200">
+          <div className="md:col-span-4 animate-in slide-in-from-right duration-500 delay-200">
             <div className="relative h-[calc(100vh-6rem)] overflow-hidden">
               {/* 底部模糊遮罩 - 和简历预览模块保持一致 */}
               <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
 
               <div className="h-full overflow-y-auto scrollbar-hide hover:scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted/30 scrollbar-thumb-rounded-full space-y-4 pr-2 pb-2">
 
-                {/* 能力光谱分析 - 统一样式版本 */}
-                <div>
-                  <Card className="relative border border-primary/20 rounded-xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
-                    <div className="p-3 pb-2">
-                      {/* 标题区域 */}
+                {/* 能力光谱分析 - 赛博朋克风格重构版本 */}
+                <div className="relative">
+                  {/* 全息背景装饰 */}
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+                    <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/60 to-transparent" />
+
+                    {/* 全息粒子效果 */}
+                    <div className="absolute inset-0 opacity-40">
+                      {[...Array(12)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-pulse"
+                          style={{
+                            left: `${10 + Math.random() * 80}%`,
+                            top: `${10 + Math.random() * 80}%`,
+                            animationDelay: `${i * 0.3}s`,
+                            animationDuration: `${2 + Math.random() * 2}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <Card className="relative border-2 border-primary/30 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 via-background/90 to-secondary/10 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-primary/50 backdrop-blur-md">
+                    {/* 霓虹边框效果 */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/20 via-blue-500/20 to-purple-600/20 opacity-50 animate-pulse" />
+
+                    <div className="relative z-10 p-3 pb-3">
+                      {/* 标题区域 - 赛博朋克风格 */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary/20 to-secondary/20 p-1">
-                            <img src={cyberLogo} alt="Prism Logo" className="w-full h-full object-cover rounded" />
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                            <div className="w-8 h-px bg-gradient-to-r from-cyan-400/50 to-transparent" />
                           </div>
                           <div>
-                            <h3 className="text-sm font-semibold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">
-                              能力光谱分析
+                            <h3 className="text-sm font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                              能力光谱
                             </h3>
-                            <p className="text-xs text-muted-foreground/80">多维度技能评估与量化</p>
+                            <p className="text-xs text-muted-foreground/80 font-mono">
+                              能力光谱 • 多维度量化分析
+                            </p>
                           </div>
                         </div>
 
-                        {/* 展开收起按钮 */}
+                        {/* 科幻风格控制按钮 */}
                         <button
                           onClick={() => setIsRadarChartExpanded(!isRadarChartExpanded)}
-                          className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary border border-primary/20 hover:border-primary/40 rounded-lg transition-colors hover:bg-primary/5"
+                          className="group relative px-4 py-2 text-xs font-medium font-mono uppercase tracking-wider text-muted-foreground hover:text-primary border border-primary/30 hover:border-primary/60 rounded-lg transition-all duration-300 hover:bg-primary/10 backdrop-blur-sm"
                         >
-                          {isRadarChartExpanded ? "收起" : "展开"}
+                          {/* 扫描线动画 */}
+                          <div className="absolute inset-0 overflow-hidden rounded-lg">
+                            <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                          </div>
+
+                          <span className="relative z-10">
+                            {isRadarChartExpanded ? "收起" : "展开"}
+                          </span>
                         </button>
                       </div>
 
-                      {/* 内容区域 */}
+                      {/* 内容区域 - 全新布局 */}
                       {isRadarChartExpanded && (
-                        <div className="grid grid-cols-5 gap-6 items-center">
-                          {/* 雷达图区域 - 占3列 */}
-                          <div className="col-span-3 relative">
-                            <div className="relative flex items-center justify-center">
-                              <RadarChart
-                                data={data.radarData}
-                                size={180}
-                              />
-                              {/* 中心装饰 */}
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="w-4 h-4 bg-gradient-to-r from-primary to-secondary rounded-full shadow-lg animate-pulse" />
-                              </div>
-                            </div>
-                            {/* 雷达图说明 */}
-                            <div className="mt-4 text-center">
-                              <p className="text-xs text-muted-foreground">
-                                综合能力维度分析
-                              </p>
-                            </div>
-                          </div>
+                        <div className="space-y-6">
+                          {/* 数据展示区 - 水平布局 */}
+                          <div className="flex items-center justify-between">
+                            {/* 左侧雷达图 */}
+                            <div className="flex-1 relative">
+                              <div className="relative flex items-center justify-center">
+                                {/* 雷达图背景装饰 */}
+                                <div className="absolute inset-0 w-48 h-48 mx-auto">
+                                  <div className="absolute inset-0 rounded-full border border-primary/20 animate-pulse" />
+                                  <div className="absolute inset-2 rounded-full border border-secondary/20 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                                  <div className="absolute inset-4 rounded-full border border-primary/20 animate-pulse" style={{ animationDelay: '1s' }} />
+                                </div>
 
-                          {/* 分数展示区域 - 占2列 */}
-                          <div className="col-span-2 text-center space-y-4">
-                            {/* 主分数 */}
-                            <div className="relative">
-                              <div className="text-5xl font-bold bg-gradient-to-br from-primary via-primary/90 to-secondary bg-clip-text text-transparent drop-shadow-sm">
-                                {data.score}
-                              </div>
-                              <div className="text-lg font-medium text-muted-foreground mt-1">
-                                综合评分
+                                <RadarChart
+                                  data={data.radarData}
+                                  size={200}
+                                />
+
+                                {/* 中心全息核心 */}
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                  <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full shadow-lg animate-pulse" />
+                                  <div className="absolute inset-0 w-6 h-6 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full blur-xl animate-pulse" />
+                                </div>
                               </div>
                             </div>
 
-                            {/* 评级标签 */}
-                            <div className="space-y-2">
-                              <div className={cn(
-                                "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
-                                data.score >= 80 ? "bg-green-100 text-green-700 border border-green-200" :
-                                  data.score >= 60 ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
-                                    "bg-red-100 text-red-700 border border-red-200"
-                              )}>
-                                <div className={cn(
-                                  "w-2 h-2 rounded-full",
-                                  data.score >= 80 ? "bg-green-500" :
-                                    data.score >= 60 ? "bg-yellow-500" :
-                                      "bg-red-500"
-                                )} />
-                                {data.score >= 80 ? "优秀" : data.score >= 60 ? "良好" : "待提升"}
+                            {/* 右侧分数展示 - 垂直布局 */}
+                            <div className="flex-1 pl-6 space-y-4">
+                              {/* 主分数区域 */}
+                              <div className="relative text-center">
+                                <div className="relative inline-block">
+                                  {/* 分数背景装饰 */}
+                                  <div className="absolute inset-0 -m-3 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-xl animate-pulse" />
+
+                                  <div className="relative">
+                                    <div className="text-4xl font-bold bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+                                      {data.score}
+                                    </div>
+                                    <div className="text-sm font-medium text-muted-foreground mt-1 font-mono uppercase tracking-wider">
+                                      综合评分
+                                    </div>
+                                  </div>
+
+                                  {/* 环形进度指示器 */}
+                                  <div className="absolute -inset-4 rounded-full border border-primary/20">
+                                    <div
+                                      className="absolute inset-0 rounded-full border border-primary/50 transition-all duration-1000"
+                                      style={{
+                                        borderTopColor: 'transparent',
+                                        borderRightColor: 'transparent',
+                                        transform: `rotate(${(data.score / 100) * 360}deg)`
+                                      }}
+                                    />
+                                  </div>
+                                </div>
                               </div>
 
-                              <div className="text-xs text-muted-foreground">
-                                超越 {Math.round(data.score * 1.2)}% 的候选人
+                              {/* 评级标签区 */}
+                              <div className="space-y-2">
+                                <div className="flex justify-center">
+                                  <div className={cn(
+                                    "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium font-mono uppercase tracking-wide transition-all duration-300 backdrop-blur-sm",
+                                    "border shadow-md",
+                                    data.score >= 80
+                                      ? "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/50 text-green-400 shadow-green-500/20"
+                                      : data.score >= 60
+                                        ? "bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/50 text-yellow-400 shadow-yellow-500/20"
+                                        : "bg-gradient-to-r from-red-500/20 to-pink-500/20 border-red-500/50 text-red-400 shadow-red-500/20"
+                                  )}>
+                                    <div className={cn(
+                                      "w-2 h-2 rounded-full animate-pulse",
+                                      data.score >= 80 ? "bg-green-400" :
+                                        data.score >= 60 ? "bg-yellow-400" :
+                                          "bg-red-400"
+                                    )} />
+                                    <span>
+                                      {data.score >= 80 ? "优秀" : data.score >= 60 ? "良好" : "待提升"}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="text-center">
+                                  <div className="text-xs text-muted-foreground/70 font-mono">
+                                    超越 {Math.round(data.score * 1.2)}% 的候选人
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -337,198 +422,90 @@ export const Dashboard = () => {
                   </Card>
                 </div>
 
-                {/* 弱点扫描和资源探测 - 重构版本 */}
-                <div className="relative">
-                  {/* 背景装饰 */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-2xl blur-xl opacity-60" />
+                {/* 弱点列表 - 极简版本 */}
+                <div className="space-y-3">
+                  {Object.entries(highlightedSections).map(([id, section], index) => {
+                    const isExpanded = expandedWeaknessId === id;
+                    const weakness = data.weaknesses.find(w => w.id === id);
 
-                  <Card className="relative border border-primary/20 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 via-background/95 to-secondary/5 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
-                    <Tabs defaultValue="weaknesses" onValueChange={setActiveTab}>
-                      {/* 重新设计的Tab导航 */}
-                      <div className="relative p-6 pb-0">
-                        <div className="flex items-center justify-center mb-6">
-                          <div className="relative flex bg-muted/30 p-1 rounded-2xl backdrop-blur-sm border border-border/20">
-                            {/* 活动指示器背景 - 优化颜色和阴影 */}
-                            <div
-                              className={cn(
-                                "absolute top-1 bottom-1 rounded-xl transition-all duration-500 ease-out",
-                                activeTab === "weaknesses"
-                                  ? "left-1 right-[50%] bg-gradient-to-r from-primary/90 to-primary shadow-lg shadow-primary/20"
-                                  : "left-[50%] right-1 bg-gradient-to-r from-secondary/90 to-secondary shadow-lg shadow-secondary/20"
-                              )}
-                            />
+                    return (
+                      <div key={id} className="relative border-2 border-primary/30 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background/90 to-secondary/10 shadow-xl hover:shadow-2xl transition-all duration-500 hover:border-primary/50 backdrop-blur-md">
+                        {/* 霓虹边框效果 */}
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 via-blue-500/20 to-purple-600/20 opacity-50 animate-pulse" />
 
-                            <button
-                              onClick={() => setActiveTab('weaknesses')}
-                              className={cn(
-                                "relative z-10 px-6 py-2.5 rounded-xl font-medium text-sm transition-all duration-300",
-                                "flex items-center gap-2.5 min-w-[110px] justify-center group",
-                                activeTab === "weaknesses"
-                                  ? "text-white transform scale-[1.02]"
-                                  : "text-muted-foreground hover:text-foreground hover:scale-[1.01]"
-                              )}
-                            >
-                              <div className={cn(
-                                "w-2 h-2 rounded-full transition-all duration-300",
-                                activeTab === "weaknesses"
-                                  ? "bg-white shadow-sm animate-pulse"
-                                  : "bg-primary/60 group-hover:bg-primary/80"
-                              )} />
-                              <span className="font-semibold">弱点扫描</span>
-                            </button>
-
-                            <button
-                              onClick={() => setActiveTab('resources')}
-                              className={cn(
-                                "relative z-10 px-6 py-2.5 rounded-xl font-medium text-sm transition-all duration-300",
-                                "flex items-center gap-2.5 min-w-[110px] justify-center group",
-                                activeTab === "resources"
-                                  ? "text-white transform scale-[1.02]"
-                                  : "text-muted-foreground hover:text-foreground hover:scale-[1.01]"
-                              )}
-                            >
-                              <div className={cn(
-                                "w-2 h-2 rounded-full transition-all duration-300",
-                                activeTab === "resources"
-                                  ? "bg-white shadow-sm animate-pulse"
-                                  : "bg-secondary/60 group-hover:bg-secondary/80"
-                              )} />
-                              <span className="font-semibold">资源探测</span>
-                            </button>
+                        <div className="relative z-10 p-4">
+                        <div
+                          className="flex items-center justify-between cursor-pointer"
+                          onClick={() => {
+                            handleWeaknessClick(id);
+                            setExpandedWeaknessId(isExpanded ? null : id);
+                          }}
+                        >
+                          <div className="flex-1">
+                            <div className="text-sm text-foreground">
+                              {isExpanded && weakness ? weakness.title : section.text}
+                            </div>
                           </div>
+                          <div className="ml-3">
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* 展开内容 */}
+                        {isExpanded && weakness && (
+                          <div className="mt-4 pt-4 border-t border-border space-y-3">
+                            <div>
+                              <h4 className="text-xs font-medium text-muted-foreground mb-1">问题分析</h4>
+                              <p className="text-sm text-foreground">{weakness.title}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-medium text-muted-foreground mb-1">详细描述</h4>
+                              <p className="text-sm text-muted-foreground">{weakness.description}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-medium text-muted-foreground mb-1">影响程度</h4>
+                              <p className="text-sm text-muted-foreground">{weakness.impact}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-medium text-muted-foreground mb-1">优化建议</h4>
+                              <p className="text-sm text-muted-foreground">{weakness.suggestion}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-medium text-muted-foreground mb-1">原始内容</h4>
+                              <p className="text-sm text-muted-foreground font-mono">{weakness.original}</p>
+                            </div>
+                            <div className="pt-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOptimizeWeakness(weakness.id);
+                                }}
+                                className="text-xs text-primary hover:text-primary/80 underline"
+                              >
+                                立即优化
+                              </button>
+                            </div>
+                          </div>
+                        )}
                         </div>
                       </div>
+                    );
+                  })}
 
-                      {/* 弱点扫描内容 - 重构版本 */}
-                      <TabsContent value="weaknesses" className="p-0 m-0">
-                        <div className="px-6 pb-3">
-                          {/* 问题列表 */}
-                          <div className="space-y-3">
-                            {Object.entries(highlightedSections).map(([id, section], index) => (
-                              <div
-                                key={id}
-                                onClick={() => handleWeaknessClick(id)}
-                                className={cn(
-                                  "group relative p-4 rounded-xl cursor-pointer transition-all duration-500 animate-in slide-in-from-bottom",
-                                  "border-2 hover:shadow-lg hover:shadow-primary/10",
-                                  highlightedSection === id
-                                    ? "bg-primary/5 border-primary/40 shadow-lg shadow-primary/10 scale-[1.01]"
-                                    : "bg-muted/30 border-muted hover:border-primary/40 hover:bg-muted/50"
-                                )}
-                                style={{ animationDelay: `${index * 150}ms` }}
-                              >
-                                {/* 左侧指示器 */}
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-primary to-primary/60 rounded-r-full opacity-60 group-hover:opacity-100 transition-opacity" />
-
-                                <div className="flex items-start gap-4 ml-3">
-                                  {/* 状态指示器 */}
-                                  <div className={cn(
-                                    "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300",
-                                    "border-2 shadow-sm",
-                                    highlightedSection === id
-                                      ? "bg-primary border-primary shadow-primary/20"
-                                      : "bg-background border-muted-foreground/30 group-hover:border-primary/50"
-                                  )}>
-                                    {highlightedSection === id ? (
-                                      <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
-                                    ) : (
-                                      <div className="w-3 h-3 border-2 border-muted-foreground/50 rounded-full" />
-                                    )}
-                                  </div>
-
-                                  {/* 内容 */}
-                                  <div className="flex-1 min-w-0">
-                                    <div className="font-medium text-sm mb-1 group-hover:text-primary transition-colors">
-                                      {section.text}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      第 {section.lineStart}-{section.lineEnd} 行 • 影响评分 -5分
-                                    </div>
-                                  </div>
-
-                                  {/* 右侧箭头 */}
-                                  <div className={cn(
-                                    "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300",
-                                    highlightedSection === id
-                                      ? "bg-primary/20 text-primary"
-                                      : "text-muted-foreground group-hover:text-primary group-hover:bg-primary/10"
-                                  )}>
-                                    <ArrowRight className="w-3 h-3" />
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* 优化按钮 */}
-                          <div className="mt-6 flex justify-center">
-                            <Button
-                              onClick={() => handleOptimizeWeakness(highlightedSection || 'all')}
-                              className="relative px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                            >
-                              <span className="flex items-center gap-2">
-                                进入炼金优化室
-                                <ArrowRight className="w-4 h-4" />
-                              </span>
-                            </Button>
-                          </div>
-                        </div>
-                      </TabsContent>
-
-                      {/* 资源探测内容 - 重构版本 */}
-                      <TabsContent value="resources" className="p-0 m-0">
-                        <div className="px-6 pb-6">
-                          {/* 资源统计 */}
-                          <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="text-center p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                              <div className="text-2xl font-bold text-primary">{RECOMMENDED_RESOURCES.stats.total}</div>
-                              <div className="text-xs text-primary/80">推荐资源</div>
-                            </div>
-                            <div className="text-center p-4 rounded-xl bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20">
-                              <div className="text-2xl font-bold text-secondary">{RECOMMENDED_RESOURCES.stats.matchRate}%</div>
-                              <div className="text-xs text-secondary/80">匹配度</div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-3">
-                            <p className="text-sm text-muted-foreground mb-4 text-center">
-                              {RECOMMENDED_RESOURCES.description}
-                            </p>
-
-                            <div className="grid gap-3">
-                              {RECOMMENDED_RESOURCES.items.map((resource, i) => (
-                                <div
-                                  key={i}
-                                  className="group relative p-4 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-muted hover:border-primary/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:scale-[1.02]"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                      <div className={cn(
-                                        "w-3 h-3 rounded-full bg-gradient-to-r",
-                                        resource.color
-                                      )} />
-                                      <span className="font-medium text-sm group-hover:text-primary transition-colors">
-                                        {resource.title}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className={cn(
-                                        "px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r text-white",
-                                        resource.color
-                                      )}>
-                                        {resource.tag}
-                                      </span>
-                                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </Card>
+                  {/* 底部按钮 */}
+                  <div className="mt-6">
+                    <Button
+                      onClick={() => handleOptimizeWeakness(highlightedSection || 'all')}
+                      className="w-full"
+                    >
+                      进入能力炼金室
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
