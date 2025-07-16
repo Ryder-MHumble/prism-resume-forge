@@ -55,7 +55,7 @@ export const getWeaknessDetails = async (weaknessId: string): Promise<ApiRespons
     // 根据ID筛选或返回所有弱点
     const weaknesses = weaknessId === 'all'
       ? sampleWeaknessItems
-      : sampleWeaknessItems.filter(w => w.id === weaknessId);
+      : sampleWeaknessItems.filter(w => w.id.toString() === weaknessId);
 
     return {
       success: true,

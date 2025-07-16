@@ -53,7 +53,6 @@ export const DASHBOARD_TEXT = {
     description: '综合能力维度分析'
   },
   weaknessDetails: {
-    problemAnalysis: '问题分析',
     detailedDescription: '详细描述',
     impactLevel: '影响程度',
     optimizationSuggestion: '优化建议',

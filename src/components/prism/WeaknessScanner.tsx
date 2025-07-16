@@ -4,10 +4,12 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface WeaknessItem {
-  id: string;
+  id: number;
   title: string;
   description: string;
   impact: string;
+  suggestion: string;
+  original: string;
 }
 
 interface WeaknessScannerProps {
@@ -49,7 +51,7 @@ export const WeaknessScanner = ({
                 "group p-4 rounded-lg border transition-prism cursor-pointer",
                 "hover:border-primary/50 hover:bg-primary/5 hover:scale-[1.02]"
               )}
-              onMouseEnter={() => onPreviewHighlight(weakness.id)}
+              onMouseEnter={() => onPreviewHighlight(weakness.id.toString())}
               onClick={() => onItemClick(weakness)}
             >
               <div className="space-y-3">

@@ -164,7 +164,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 根据weaknessId生成改进项目
     const improvements: ImprovementItem[] = weaknesses.map(weakness => ({
-      id: weakness.id,
+      id: weakness.id.toString(),
       original: weakness.original,
       improved: '',
       completed: false,

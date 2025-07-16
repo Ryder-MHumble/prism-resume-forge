@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { cn } from '@/lib/utils';
+import * as pdfjsLib from 'pdfjs-dist';
 
 interface ExtractedFile {
   file: File;
@@ -18,8 +19,8 @@ export const FileTextExtraction = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 支持的文件类型
-  const supportedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
-  const supportedExtensions = ['.pdf', '.png', '.jpg', '.jpeg'];
+  const supportedTypes = ['application/pdf'];
+  const supportedExtensions = ['.pdf'];
 
   // 检查文件类型
   const isValidFile = (file: File) => {
@@ -29,33 +30,79 @@ export const FileTextExtraction = () => {
     );
     return isValidType || isValidExtension;
   };
-  // 外部服务文本提取功能（待实现）
+
+  // PDF文本提取功能
   const extractTextFromFile = async (file: File): Promise<string> => {
-    // 模拟处理时间
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      // 配置 PDF.js Worker（如果还没有配置）
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+      }
 
-    // 这里将集成外部文本提取服务
-    // TODO: 集成外部API服务进行文件文本提取
+      // 检查文件类型
+      const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
 
-    const fileType = file.type || 'unknown';
-    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+      if (isPDF) {
+        // PDF 文件处理
+        const arrayBuffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
 
-    return `文件 "${file.name}" 已准备好发送到外部服务进行文本提取。
+        // 使用 PDF.js 加载PDF文档
+        const loadingTask = pdfjsLib.getDocument(uint8Array);
+        const pdf = await loadingTask.promise;
 
---- 文件信息 ---
-文件类型: ${fileType}
-文件大小: ${fileSize} MB
-上传时间: ${new Date().toLocaleString()}
+        let extractedText = '';
 
---- 待集成服务 ---
-建议的外部服务选项：
-• Google Cloud Document AI
-• Azure Form Recognizer
-• AWS Textract
-• 百度智能云文字识别
-• 腾讯云OCR
+        // 遍历所有页面提取文本
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const textContent = await page.getTextContent();
 
-注意：请在此处集成您选择的外部文本提取服务API。`;
+          // 将文本项连接成字符串
+          const pageText = textContent.items
+            .map((item: any) => item.str)
+            .join(' ');
+
+          extractedText += pageText + '\n\n';
+        }
+
+        extractedText = extractedText.trim();
+
+        if (!extractedText) {
+          throw new Error('PDF文件中未找到可提取的文本内容，可能是扫描版PDF');
+        }
+
+        // 返回包含文件信息和提取文本的结果
+        return `=== PDF文本提取结果 ===
+
+文件名: ${file.name}
+文件大小: ${(file.size / 1024 / 1024).toFixed(2)} MB
+页数: ${pdf.numPages}
+提取时间: ${new Date().toLocaleString()}
+
+--- 提取的文本内容 ---
+
+${extractedText}
+
+--- 提取完成 ---
+总字符数: ${extractedText.length}
+建议: 请检查提取的文本是否完整准确`;
+
+      } else if (file.type.startsWith('image/')) {
+        // 图片文件处理（暂不支持OCR）
+        throw new Error('图片文件需要OCR功能，当前版本暂不支持。建议使用PDF格式的文件。');
+      } else {
+        // 其他文件类型
+        throw new Error(`不支持的文件类型：${file.type}。目前仅支持PDF文件的文本提取。`);
+      }
+
+    } catch (error) {
+      console.error('文件提取失败:', error);
+
+      // 返回错误信息
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      throw new Error(`文本提取失败: ${errorMessage}`);
+    }
   };
 
   // 处理文件提取
@@ -63,7 +110,7 @@ export const FileTextExtraction = () => {
     const validFiles = files.filter(isValidFile);
 
     if (validFiles.length === 0) {
-      alert('请上传支持的文件格式：PDF、PNG、JPG');
+      alert('请上传支持的文件格式：PDF');
       return;
     }
 
@@ -94,7 +141,7 @@ export const FileTextExtraction = () => {
         setExtractedFiles(prev =>
           prev.map((item, index) =>
             index === fileIndex
-              ? { ...item, status: 'error' as const, error: '文本提取失败' }
+              ? { ...item, status: 'error' as const, error: error instanceof Error ? error.message : '文本提取失败' }
               : item
           )
         );
@@ -158,9 +205,9 @@ export const FileTextExtraction = () => {
               <FileText className="w-8 h-8 text-primary" />
               <div>
                 <h1 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                  文件文本提取测试
+                  PDF文本提取测试
                 </h1>
-                <p className="text-xs text-muted-foreground">支持 PDF、PNG、JPG 格式</p>
+                <p className="text-xs text-muted-foreground">支持 PDF 格式文本提取</p>
               </div>
             </div>
           </div>
@@ -184,12 +231,13 @@ export const FileTextExtraction = () => {
               onDrop={handleDrop}
             >
               <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2">上传文件进行文本提取</h3>
+              <h3 className="text-lg font-semibold mb-2">上传PDF文件进行文本提取</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                拖拽文件到此处，或点击按钮选择文件
+                拖拽PDF文件到此处，或点击按钮选择PDF文件
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                支持格式：PDF、PNG、JPG（最大10MB）
+                支持格式：PDF（最大10MB）<br />
+                注意：仅支持包含文本内容的PDF，不支持扫描版PDF
               </p>
 
               <Button
@@ -204,7 +252,7 @@ export const FileTextExtraction = () => {
                 ref={fileInputRef}
                 type="file"
                 multiple
-                accept=".pdf,.png,.jpg,.jpeg"
+                accept=".pdf"
                 onChange={handleFileSelect}
                 className="hidden"
               />

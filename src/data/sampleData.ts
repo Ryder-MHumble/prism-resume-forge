@@ -16,7 +16,7 @@ export const sampleDashboardData: DashboardData = {
   ],
   weaknesses: [
     {
-      id: "project1",
+      id: 1,
       title: "[项目1] 描述中缺少可量化的成就",
       description: "项目描述应包含具体的数字和成果",
       impact: "中等",
@@ -24,12 +24,12 @@ export const sampleDashboardData: DashboardData = {
       original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标"
     },
     {
-      id: "skill1",
-      title: "技能描述过于笼统",
-      description: "技能描述应该包含具体程度和应用场景",
+      id: 2,
+      title: "专业不对口",
+      description: "简历中提及AI产品经理、LLM底层知识等，与岗位要求的硬件产品经验严重偏离，明显不符合高级硬件产品经理的硬性条件。",
       impact: "高",
-      suggestion: "具体说明技能熟练程度和应用场景，避免简单列举",
-      original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3"
+      suggestion: "建议重新聚焦硬件产品开发，增加硬件开发流程、传感器集成、低功耗设计等关键词，以匹配岗位JD要求。",
+      original: "个人优势：专业技能知识：...LLM底层知识..."
     }
   ],
   resumeContent: resumeMarkdown
@@ -38,7 +38,7 @@ export const sampleDashboardData: DashboardData = {
 // 炼金室示例数据
 export const sampleWeaknessItems: WeaknessItem[] = [
   {
-    id: "project1",
+    id: 1,
     title: "[项目1] 描述中缺少可量化的成就",
     description: "项目描述应包含具体的数字和成果",
     impact: "中等",
@@ -46,7 +46,7 @@ export const sampleWeaknessItems: WeaknessItem[] = [
     original: "开发了一个复杂的数据可视化平台，展示企业的关键性能指标"
   },
   {
-    id: "skill1",
+    id: 2,
     title: "技能描述过于笼统",
     description: "技能描述应该包含具体程度和应用场景",
     impact: "高",
@@ -54,7 +54,7 @@ export const sampleWeaknessItems: WeaknessItem[] = [
     original: "编程语言: JavaScript (ES6+), TypeScript, HTML5, CSS3"
   },
   {
-    id: "project2",
+    id: 3,
     title: "[项目2] 缺少具体技术细节",
     description: "技术实现细节不够具体",
     impact: "轻微",

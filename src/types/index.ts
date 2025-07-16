@@ -16,7 +16,7 @@ export interface RadarData {
 
 // 弱点分析类型
 export interface WeaknessItem {
-  id: string;
+  id: number;
   title: string;
   description: string;
   impact: string;

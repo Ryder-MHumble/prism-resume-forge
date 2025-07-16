@@ -30,7 +30,7 @@ export const WeaknessList = ({
     <div className="space-y-3">
       {Object.entries(HIGHLIGHTED_SECTIONS).map(([id, section], index) => {
         const isExpanded = expandedWeaknessId === id;
-        const weakness = data.weaknesses.find(w => w.id === id);
+        const weakness = data.weaknesses.find(w => w.id.toString() === id);
 
         return (
           <div key={id} className={CARD_STYLES.weaknessCard}>
@@ -61,12 +61,6 @@ export const WeaknessList = ({
                 <div className="mt-4 pt-4 border-t border-border space-y-3">
                   <div>
                     <h4 className="text-xs font-medium text-muted-foreground mb-1">
-                      {DASHBOARD_TEXT.weaknessDetails.problemAnalysis}
-                    </h4>
-                    <p className="text-sm text-foreground">{weakness.title}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-medium text-muted-foreground mb-1">
                       {DASHBOARD_TEXT.weaknessDetails.detailedDescription}
                     </h4>
                     <p className="text-sm text-muted-foreground">{weakness.description}</p>
@@ -93,7 +87,7 @@ export const WeaknessList = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        onOptimizeWeakness(weakness.id);
+                        onOptimizeWeakness(weakness.id.toString());
                       }}
                       className="text-xs text-primary hover:text-primary/80 underline"
                     >

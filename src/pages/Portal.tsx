@@ -36,8 +36,6 @@ export const Portal = () => {
     }
   };
 
-
-
   return (
     <div className="h-screen w-screen overflow-hidden relative">
       {/* 赛博朋克背景 */}
