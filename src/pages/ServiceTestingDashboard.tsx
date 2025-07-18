@@ -39,6 +39,9 @@ export const ServiceTestingDashboard = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [customContent, setCustomContent] = useState('');
 
+  // 评估模式状态
+  const [evaluationMode, setEvaluationMode] = useState<'gentle' | 'mean'>('gentle');
+
   // UI状态
   const [expandedResultId, setExpandedResultId] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<string | null>(null);
@@ -232,14 +235,14 @@ ${extractedText}
       requestId,
       timestamp: startTime,
       status: 'pending',
-      systemPrompt: '简历分析系统提示词',
+      systemPrompt: `${evaluationMode === 'gentle' ? '温柔模式' : '严苛模式'}系统提示词`,
       inputContent: '默认简历内容'
     };
     setLlmTestResults(prev => [testResult, ...prev.slice(0, 9)]);
     updateActiveRequestsCount();
 
     try {
-      const result = await analyzeResumeWithLLM();
+      const result = await analyzeResumeWithLLM(evaluationMode);
       const duration = Date.now() - startTime;
 
       setLlmTestResults(prev =>
@@ -476,6 +479,44 @@ ${extractedText}
                     LLM测试配置
                   </h3>
 
+                  {/* 评估模式选择 */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">评估模式</label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setEvaluationMode('gentle')}
+                        className={cn(
+                          "flex-1 px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200",
+                          evaluationMode === 'gentle'
+                            ? "bg-green-500/20 border-green-500 text-green-700 dark:text-green-300"
+                            : "bg-background border-border hover:border-green-500/50 hover:bg-green-500/5"
+                        )}
+                      >
+                        <div className="flex items-center gap-2 justify-center">
+                          <div className="w-2 h-2 rounded-full bg-green-500" />
+                          温柔模式
+                        </div>
+                        <div className="text-[10px] text-muted-foreground mt-1">鼓励式评估</div>
+                      </button>
+
+                      <button
+                        onClick={() => setEvaluationMode('mean')}
+                        className={cn(
+                          "flex-1 px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200",
+                          evaluationMode === 'mean'
+                            ? "bg-red-500/20 border-red-500 text-red-700 dark:text-red-300"
+                            : "bg-background border-border hover:border-red-500/50 hover:bg-red-500/5"
+                        )}
+                      >
+                        <div className="flex items-center gap-2 justify-center">
+                          <div className="w-2 h-2 rounded-full bg-red-500" />
+                          严苛模式
+                        </div>
+                        <div className="text-[10px] text-muted-foreground mt-1">严格式评估</div>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* 并发测试按钮组 */}
                   <div className="space-y-3">
                     <Button
@@ -649,6 +690,11 @@ ${extractedText}
                             )} />
                             <div>
                               <span className="font-mono text-sm font-medium">{result.requestId}</span>
+                              {result.isStreaming && (
+                                <span className="ml-2 text-xs text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full animate-pulse">
+                                  流式输出中...
+                                </span>
+                              )}
                             </div>
                           </div>
 
@@ -814,6 +860,10 @@ ${extractedText}
                           <div className="mt-4 bg-muted/30 rounded-lg overflow-hidden border">
                             <div className="flex items-center justify-between px-3 py-2 bg-muted/50 border-b">
                               <span className="text-xs font-medium text-muted-foreground">响应内容</span>
+                              <div className="flex items-center gap-2">
+                                {result.isStreaming && (
+                                  <span className="text-xs text-blue-500 animate-pulse">实时输出中...</span>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="ghost"
@@ -822,6 +872,7 @@ ${extractedText}
                                 >
                                   {expandedResultId === result.requestId ? "收起" : "展开详情"}
                                 </Button>
+                              </div>
                             </div>
                             <div className={cn(
                               "transition-all duration-300 ease-in-out",

@@ -33,7 +33,7 @@ export const ResumeViewer = ({
       <div
         ref={scrollContainerRef}
         onScroll={onScroll}
-        className="h-full overflow-y-auto scrollbar-hide hover:scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted/30 scrollbar-thumb-rounded-full"
+        className="h-full overflow-y-auto scrollbar-hide"
       >
         <ResumeRenderer
           content={resumeMarkdown}

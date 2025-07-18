@@ -1,5 +1,5 @@
 // 基础类型定义
-export type AnalysisMode = 'hardcore' | 'balanced' | 'gentle';
+export type AnalysisMode = 'hardcore' | 'supportive' | 'gentle';
 
 // 文件上传相关类型
 export interface UploadedFiles {
@@ -73,6 +73,30 @@ export interface ApiResponse<T = any> {
 export interface AnalysisRequest {
   files: UploadedFiles;
   mode: AnalysisMode;
+}
+
+// LLM简历分析结果类型
+export interface LLMAnalysisResult {
+  overall_score: number;
+  dimension_scores: Array<{
+    dimension: string;
+    score: number;
+  }>;
+  issues: Array<{
+    id: number;
+    title: string;
+    description: string;
+    impact: string;
+    original: string;
+    suggestion: string;
+  }>;
+}
+
+// 分析状态类型
+export interface AnalysisState {
+  isAnalyzing: boolean;
+  analysisResult: LLMAnalysisResult | null;
+  error: string | null;
 }
 
 // 组件Props基础类型

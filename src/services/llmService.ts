@@ -100,8 +100,9 @@ class RequestManager {
 const requestManager = new RequestManager();
 
 // 获取系统提示词
-const getSystemPrompt = async (): Promise<string> => {
-  const response = await fetch('/Prompts/mean-resume-val.md');
+const getSystemPrompt = async (mode: 'gentle' | 'mean' = 'mean'): Promise<string> => {
+  const promptFile = mode === 'gentle' ? '/Prompts/gentle-resume-val.md' : '/Prompts/mean-resume-val.md';
+  const response = await fetch(promptFile);
   if (!response.ok) {
     throw new Error('获取系统提示词失败');
   }
@@ -284,7 +285,7 @@ const parseAnalysisResult = (content: string): ResumeAnalysisResult => {
 };
 
 // 主要的简历分析服务
-export const analyzeResumeWithLLM = async (): Promise<ApiResponse<ResumeAnalysisResult>> => {
+export const analyzeResumeWithLLM = async (evaluationMode: 'gentle' | 'mean' = 'mean'): Promise<ApiResponse<ResumeAnalysisResult>> => {
   const requestId = requestManager.generateRequestId();
 
   try {
@@ -294,7 +295,7 @@ export const analyzeResumeWithLLM = async (): Promise<ApiResponse<ResumeAnalysis
       return await withRetry(async () => {
         // 并行获取系统提示词和用户内容
         const [systemPrompt, userContent] = await Promise.all([
-          getSystemPrompt(),
+          getSystemPrompt(evaluationMode),
           getUserContent()
         ]);
 

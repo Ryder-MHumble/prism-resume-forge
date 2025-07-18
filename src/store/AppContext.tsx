@@ -6,7 +6,8 @@ import {
   DashboardData,
   WeaknessItem,
   ImprovementItem,
-  RevelationData
+  RevelationData,
+  LLMAnalysisResult
 } from '@/types';
 
 // 应用状态接口
@@ -40,6 +41,9 @@ interface AppContextState {
 
   // 错误信息
   error: string | null;
+
+  // LLM分析结果
+  llmAnalysisResult: LLMAnalysisResult | null;
 }
 
 // Action类型定义
@@ -55,6 +59,7 @@ type AppAction =
   | { type: 'SET_REVELATION_DATA'; payload: RevelationData }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'SET_LLM_ANALYSIS_RESULT'; payload: LLMAnalysisResult | null }
   | { type: 'RESET_STATE' };
 
 // 初始状态
@@ -69,6 +74,7 @@ const initialState: AppContextState = {
   revelationData: null,
   isLoading: false,
   error: null,
+  llmAnalysisResult: null,
 };
 
 // Reducer函数
@@ -109,6 +115,9 @@ function appReducer(state: AppContextState, action: AppAction): AppContextState 
     case 'SET_ERROR':
       return { ...state, error: action.payload };
 
+    case 'SET_LLM_ANALYSIS_RESULT':
+      return { ...state, llmAnalysisResult: action.payload };
+
     case 'RESET_STATE':
       return initialState;
 
@@ -133,6 +142,7 @@ interface AppContextType {
   resetApp: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  setLLMAnalysisResult: (result: LLMAnalysisResult | null) => void;
 }
 
 // 创建Context
@@ -195,6 +205,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     dispatch({ type: 'SET_ERROR', payload: error });
   }, []);
 
+  const setLLMAnalysisResult = useCallback((result: LLMAnalysisResult | null) => {
+    dispatch({ type: 'SET_LLM_ANALYSIS_RESULT', payload: result });
+  }, []);
+
   const contextValue: AppContextType = {
     state,
     dispatch,
@@ -208,6 +222,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     resetApp,
     setLoading,
     setError,
+    setLLMAnalysisResult,
   };
 
   return (

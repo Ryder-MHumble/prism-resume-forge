@@ -5,7 +5,7 @@ import { AnalysisSummary } from '@/components/dashboard/AnalysisSummary';
 import { ResumeViewer } from '@/components/dashboard/ResumeViewer';
 import { RadarAnalysis } from '@/components/dashboard/RadarAnalysis';
 import { WeaknessList } from '@/components/dashboard/WeaknessList';
-import { DASHBOARD_UI } from '@/constants/dashboard';
+// import { DASHBOARD_UI } from '@/constants/dashboard';
 
 export const Dashboard = () => {
   const {
@@ -61,7 +61,7 @@ export const Dashboard = () => {
               {/* 底部模糊遮罩 - 和简历预览模块保持一致 */}
               <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
 
-              <div className="h-full overflow-y-auto scrollbar-hide hover:scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted/30 scrollbar-thumb-rounded-full space-y-4 pr-2 pb-2">
+              <div className="h-full overflow-y-auto scrollbar-hide space-y-4 pr-2 pb-2">
                 {/* 能力光谱分析 */}
                 <RadarAnalysis
                   data={data}

@@ -1,8 +1,9 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sampleDashboardData } from '@/data/sampleData';
 import { DASHBOARD_UI } from '@/constants/dashboard';
-import type { DashboardData } from '@/types';
+import { useAppContext } from '@/store/AppContext';
+import type { DashboardData, RadarData, WeaknessItem } from '@/types';
 
 export interface UseDashboardReturn {
   // 数据
@@ -36,6 +37,7 @@ export interface UseDashboardReturn {
 export const useDashboard = (): UseDashboardReturn => {
   const navigate = useNavigate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { state } = useAppContext();
 
   // 状态管理
   const [highlightedSection, setHighlightedSection] = useState<string | null>(null);
@@ -45,8 +47,41 @@ export const useDashboard = (): UseDashboardReturn => {
   const [isRadarChartExpanded, setIsRadarChartExpanded] = useState(true);
   const [expandedWeaknessId, setExpandedWeaknessId] = useState<string | null>(null);
 
-  // 使用示例数据
-  const data = sampleDashboardData;
+  // 将LLM分析结果转换为Dashboard数据格式
+  const data = useMemo((): DashboardData => {
+    const llmResult = state.llmAnalysisResult;
+
+    if (!llmResult) {
+      // 如果没有LLM结果，返回示例数据
+      return sampleDashboardData;
+    }
+
+    // 转换维度评分为雷达图数据
+    const radarData: RadarData[] = llmResult.dimension_scores.map(item => ({
+      category: item.dimension,
+      value: item.score,
+      maxValue: 5  // LLM返回的是0-5分，这里设置最大值为5
+    }));
+
+    // 转换问题列表为弱点数据
+    const weaknesses: WeaknessItem[] = llmResult.issues.map(issue => ({
+      id: issue.id,
+      title: issue.title,
+      description: issue.description,
+      impact: issue.impact,
+      suggestion: issue.suggestion,
+      original: issue.original
+    }));
+
+     return {
+       score: llmResult.overall_score,
+       mode: state.analysisMode, // 从全局状态获取用户选择的分析模式
+       comment: `综合评分 ${llmResult.overall_score}/100，发现 ${llmResult.issues.length} 个需要优化的问题`,
+       radarData,
+       weaknesses,
+       resumeContent: sampleDashboardData.resumeContent // 简历内容保持使用静态数据
+     };
+   }, [state.llmAnalysisResult, state.analysisMode]);
 
   // 弱点点击处理
   const handleWeaknessClick = useCallback((weaknessId: string) => {
