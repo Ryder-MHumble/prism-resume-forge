@@ -54,11 +54,27 @@ export const AnalysisSummary = ({ isExpanded, onToggle }: AnalysisSummaryProps) 
                   {ANALYSIS_SUMMARY.analysisPoints.map((point, index) => (
                     <div key={point.type} className="flex items-start gap-2.5">
                       <div
-                        className={`w-1.5 h-1.5 bg-${point.color} rounded-full mt-1.5 animate-pulse`}
+                        className={`w-1.5 h-1.5 rounded-full mt-1.5 animate-pulse ${
+                          point.color === 'primary' ? 'bg-primary' :
+                          point.color === 'secondary' ? 'bg-secondary' :
+                          point.color === 'cyan' ? 'bg-cyan-400' :
+                          point.color === 'blue' ? 'bg-blue-400' :
+                          point.color === 'purple' ? 'bg-purple-400' :
+                          point.color === 'green' ? 'bg-green-400' :
+                          'bg-primary'
+                        }`}
                         style={{ animationDelay: `${point.delay}s` }}
                       />
                       <p className="text-sm text-foreground leading-relaxed">
-                        <span className={`font-medium text-${point.color}`}>{point.label}：</span>
+                        <span className={`font-medium ${
+                          point.color === 'primary' ? 'text-primary' :
+                          point.color === 'secondary' ? 'text-secondary' :
+                          point.color === 'cyan' ? 'text-cyan-400' :
+                          point.color === 'blue' ? 'text-blue-400' :
+                          point.color === 'purple' ? 'text-purple-400' :
+                          point.color === 'green' ? 'text-green-400' :
+                          'text-primary'
+                        }`}>{point.label}：</span>
                         {point.content}
                       </p>
                     </div>

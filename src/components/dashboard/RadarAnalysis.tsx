@@ -29,15 +29,15 @@ export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps
 
         {/* 全息粒子效果 */}
         <div className="absolute inset-0 opacity-40">
-          {[...Array(PARTICLE_CONFIG.count)].map((_, i) => (
+          {[...Array(12)].map((_, i) => (
             <div
               key={i}
-              className={`absolute w-${PARTICLE_CONFIG.size.width} h-${PARTICLE_CONFIG.size.height} bg-gradient-to-r ${PARTICLE_CONFIG.colors.gradient} rounded-full animate-pulse`}
+              className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-pulse"
               style={{
-                left: `${PARTICLE_CONFIG.position.minX + Math.random() * (PARTICLE_CONFIG.position.maxX - PARTICLE_CONFIG.position.minX)}%`,
-                top: `${PARTICLE_CONFIG.position.minY + Math.random() * (PARTICLE_CONFIG.position.maxY - PARTICLE_CONFIG.position.minY)}%`,
-                animationDelay: `${i * PARTICLE_CONFIG.baseDelay}s`,
-                animationDuration: `${PARTICLE_CONFIG.baseDuration + Math.random() * PARTICLE_CONFIG.randomRange}s`
+                left: `${10 + Math.random() * 80}%`,
+                top: `${10 + Math.random() * 80}%`,
+                animationDelay: `${i * 0.3}s`,
+                animationDuration: `${2 + Math.random() * 2}s`
               }}
             />
           ))}
@@ -91,13 +91,9 @@ export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps
                 <div className="flex-1 relative">
                   <div className="relative flex items-center justify-center">                    {/* 雷达图背景装饰 */}
                     <div className="absolute inset-0 w-48 h-48 mx-auto">
-                      {RADAR_DECORATIONS.rings.map((ring, index) => (
-                        <div
-                          key={index}
-                          className={`absolute ${ring.inset ? `inset-${ring.inset}` : 'inset-0'} rounded-full border ${ring.opacity} animate-pulse`}
-                          style={{ animationDelay: ring.delay }}
-                        />
-                      ))}
+                      <div className="absolute inset-0 rounded-full border border-primary/20 animate-pulse" style={{ animationDelay: '0s' }} />
+                      <div className="absolute inset-2 rounded-full border border-secondary/20 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                      <div className="absolute inset-4 rounded-full border border-primary/20 animate-pulse" style={{ animationDelay: '1s' }} />
                     </div>
 
                     <RadarChart
@@ -107,8 +103,8 @@ export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps
 
                     {/* 中心全息核心 */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className={`w-${RADAR_DECORATIONS.centerCore.size} h-${RADAR_DECORATIONS.centerCore.size} bg-gradient-to-r ${RADAR_DECORATIONS.centerCore.gradient} rounded-full shadow-lg animate-pulse`} />
-                      <div className={`absolute inset-0 w-${RADAR_DECORATIONS.centerCore.size} h-${RADAR_DECORATIONS.centerCore.size} bg-gradient-to-r ${RADAR_DECORATIONS.centerCore.gradient} rounded-full blur-xl animate-pulse`} />
+                      <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full shadow-lg animate-pulse" />
+                      <div className="absolute inset-0 w-6 h-6 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full blur-xl animate-pulse" />
                     </div>
                   </div>
                 </div>

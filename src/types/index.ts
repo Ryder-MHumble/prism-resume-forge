@@ -122,3 +122,32 @@ export interface ModalState {
   title?: string;
   content?: string;
 }
+
+// LLM服务测试相关类型
+export interface LLMTestResult {
+  requestId: string;
+  timestamp: number;
+  status: 'pending' | 'success' | 'error' | 'cancelled';
+  prompt?: string;
+  response?: string;
+  error?: string;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  duration?: number;
+  systemPrompt?: string;
+  inputContent?: string;
+}
+
+// 测试服务类型
+export type TestServiceType = 'pdf' | 'llm' | 'analysis' | 'custom';
+
+// 测试配置类型
+export interface TestConfig {
+  serviceType: TestServiceType;
+  maxConcurrent?: number;
+  retryCount?: number;
+  timeout?: number;
+}

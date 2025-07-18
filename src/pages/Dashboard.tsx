@@ -27,7 +27,7 @@ export const Dashboard = () => {
   } = useDashboard();
 
   return (
-    <div className={`h-screen bg-background animate-in fade-in duration-${DASHBOARD_UI.animations.fadeInDuration} overflow-hidden flex flex-col relative`}>
+    <div className="h-screen bg-background animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
       {/* 赛博朋克背景特效 */}
       <CyberpunkBackground intensity="low" className="opacity-30" />
 
@@ -35,10 +35,10 @@ export const Dashboard = () => {
       <DashboardHeader onBack={handleBack} />
 
       {/* 主内容 - 重新设计的布局 */}
-      <main className={`container mx-auto px-4 py-${DASHBOARD_UI.layout.contentPadding} flex-1 overflow-hidden`}>
-        <div className={`grid grid-cols-1 md:grid-cols-10 gap-6`}>
+      <main className="container mx-auto px-4 py-6 flex-1 overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
           {/* 左侧区域 - 包含智能分析总结和简历渲染区 */}
-          <div className={`md:col-span-${DASHBOARD_UI.layout.leftColumnSpan} space-y-3 animate-in slide-in-from-left duration-${DASHBOARD_UI.animations.slideInDuration} delay-${DASHBOARD_UI.animations.slideInDelay.left}`}>
+          <div className="md:col-span-6 space-y-3 animate-in slide-in-from-left duration-500 delay-100">
             {/* 智能分析总结模块 */}
             <AnalysisSummary
               isExpanded={isAnalysisSummaryExpanded}
@@ -56,7 +56,7 @@ export const Dashboard = () => {
           </div>
 
           {/* 右侧功能区 */}
-          <div className={`md:col-span-${DASHBOARD_UI.layout.rightColumnSpan} animate-in slide-in-from-right duration-${DASHBOARD_UI.animations.slideInDuration} delay-${DASHBOARD_UI.animations.slideInDelay.right}`}>
+          <div className="md:col-span-4 animate-in slide-in-from-right duration-500 delay-200">
             <div className="relative h-[calc(100vh-6rem)] overflow-hidden">
               {/* 底部模糊遮罩 - 和简历预览模块保持一致 */}
               <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
