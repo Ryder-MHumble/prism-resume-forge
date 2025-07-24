@@ -77,6 +77,7 @@ export interface AnalysisRequest {
 
 // LLM简历分析结果类型
 export interface LLMAnalysisResult {
+  summarization: string;
   overall_score: number;
   dimension_scores: Array<{
     dimension: string;

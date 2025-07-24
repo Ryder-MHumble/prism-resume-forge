@@ -20,36 +20,7 @@ export const HIGHLIGHTED_SECTIONS = {
 export const ANALYSIS_SUMMARY = {
   title: '智能分析总结',
   subtitle: '基于大模型算法的综合评估',
-
-  analysisPoints: [
-    {
-      type: 'overview',
-      label: '整体评估',
-      content: '简历整体结构清晰，技术栈匹配度较高，但部分项目描述缺乏具体量化的成果展示。',
-      color: 'primary',
-      delay: 0
-    },
-    {
-      type: 'finding',
-      label: '关键发现',
-      content: '技能部分存在过度使用"精通"等模糊词汇的情况，建议重点优化项目成果的数据化表达。',
-      color: 'secondary',
-      delay: 0.3
-    },
-    {
-      type: 'suggestion',
-      label: '优化建议',
-      content: '增加具体的项目数据和成果指标，提升简历的说服力和竞争优势。',
-      color: 'primary',
-      delay: 0.6
-    }
-  ],
-
-  tags: [
-    { text: '结构清晰', color: 'primary' },
-    { text: '待量化', color: 'orange' },
-    { text: '可优化', color: 'secondary' }
-  ]
+  content: '简历整体结构清晰，技术栈匹配度较高，但部分项目描述缺乏具体量化的成果展示。技能部分存在过度使用"精通"等模糊词汇的情况，建议重点优化项目成果的数据化表达，增加具体的项目数据和成果指标，以提升简历的说服力和竞争优势。'
 };
 
 // 能力光谱分析配置

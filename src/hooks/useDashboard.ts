@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sampleDashboardData } from '@/data/sampleData';
 import { DASHBOARD_UI } from '@/constants/dashboard';
 import { useAppContext } from '@/store/AppContext';
 import type { DashboardData, RadarData, WeaknessItem } from '@/types';
@@ -8,6 +7,7 @@ import type { DashboardData, RadarData, WeaknessItem } from '@/types';
 export interface UseDashboardReturn {
   // 数据
   data: DashboardData;
+  analysisSummary: string;
 
   // 状态
   highlightedSection: string | null;
@@ -52,8 +52,15 @@ export const useDashboard = (): UseDashboardReturn => {
     const llmResult = state.llmAnalysisResult;
 
     if (!llmResult) {
-      // 如果没有LLM结果，返回示例数据
-      return sampleDashboardData;
+      // 如果没有LLM结果，返回空的默认数据
+      return {
+        score: 0,
+        mode: state.analysisMode,
+        comment: '暂无分析结果，请先上传简历进行分析',
+        radarData: [],
+        weaknesses: [],
+        resumeContent: '暂无简历内容'
+      };
     }
 
     // 转换维度评分为雷达图数据
@@ -79,9 +86,14 @@ export const useDashboard = (): UseDashboardReturn => {
        comment: `综合评分 ${llmResult.overall_score}/100，发现 ${llmResult.issues.length} 个需要优化的问题`,
        radarData,
        weaknesses,
-       resumeContent: sampleDashboardData.resumeContent // 简历内容保持使用静态数据
+       resumeContent: '简历内容加载中...' // 简历内容将由其他组件提供
      };
    }, [state.llmAnalysisResult, state.analysisMode]);
+
+  // 提取LLM分析总结
+  const analysisSummary = useMemo(() => {
+    return state.llmAnalysisResult?.summarization || '';
+  }, [state.llmAnalysisResult]);
 
   // 弱点点击处理
   const handleWeaknessClick = useCallback((weaknessId: string) => {
@@ -123,6 +135,7 @@ export const useDashboard = (): UseDashboardReturn => {
   return {
     // 数据
     data,
+    analysisSummary,
 
     // 状态
     highlightedSection,

@@ -10,6 +10,7 @@ import { WeaknessList } from '@/components/dashboard/WeaknessList';
 export const Dashboard = () => {
   const {
     data,
+    analysisSummary,
     highlightedSection,
     showScrollToTop,
     isAnalysisSummaryExpanded,
@@ -43,41 +44,58 @@ export const Dashboard = () => {
             <AnalysisSummary
               isExpanded={isAnalysisSummaryExpanded}
               onToggle={setIsAnalysisSummaryExpanded}
+              content={analysisSummary}
             />
 
             {/* 简历渲染区 */}
-            <ResumeViewer
-              isAnalysisSummaryExpanded={isAnalysisSummaryExpanded}
-              scrollContainerRef={scrollContainerRef}
-              showScrollToTop={showScrollToTop}
-              onScroll={handleScroll}
-              onScrollToTop={scrollToTop}
-            />
+            <div className="relative">
+              {/* 优化的磨砂玻璃渐变过渡效果 */}
+              <div className="absolute top-0 left-0 right-0 h-12 z-10 pointer-events-none">
+                {/* 主渐变层 - 背景色渐变 */}
+                <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 via-background/85 via-background/70 via-background/50 via-background/30 via-background/15 to-transparent" />
+                {/* 模糊层 - 增强玻璃效果 */}
+                <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 via-background/15 via-background/8 to-transparent backdrop-blur-[2px]" />
+                {/* 细微光泽层 - 增加质感 */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-white/[0.01] to-transparent" />
+              </div>
+
+              <ResumeViewer
+                isAnalysisSummaryExpanded={isAnalysisSummaryExpanded}
+                scrollContainerRef={scrollContainerRef}
+                showScrollToTop={showScrollToTop}
+                onScroll={handleScroll}
+                onScrollToTop={scrollToTop}
+              />
+            </div>
           </div>
 
           {/* 右侧功能区 */}
           <div className="md:col-span-4 animate-in slide-in-from-right duration-500 delay-200">
-            <div className="relative h-[calc(100vh-6rem)] overflow-hidden">
-              {/* 底部模糊遮罩 - 和简历预览模块保持一致 */}
-              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
-
-              <div className="h-full overflow-y-auto scrollbar-hide space-y-4 pr-2 pb-2">
-                {/* 能力光谱分析 */}
+            <div className="h-[calc(100vh-6rem)] flex flex-col space-y-4">
+              {/* 固定的能力光谱分析 */}
+              <div className="flex-shrink-0">
                 <RadarAnalysis
                   data={data}
                   isExpanded={isRadarChartExpanded}
                   onToggle={setIsRadarChartExpanded}
                 />
+              </div>
 
-                {/* 弱点列表 */}
-                <WeaknessList
-                  data={data}
-                  expandedWeaknessId={expandedWeaknessId}
-                  highlightedSection={highlightedSection}
-                  onWeaknessClick={handleWeaknessClick}
-                  onToggleExpansion={handleToggleWeaknessExpansion}
-                  onOptimizeWeakness={handleOptimizeWeakness}
-                />
+              {/* 可滚动的弱点列表区域 */}
+              <div className="flex-1 relative overflow-hidden min-h-0">
+                {/* 底部模糊遮罩 - 和简历预览模块保持一致 */}
+                <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
+
+                <div className="h-full overflow-y-auto scrollbar-hide pr-2 pb-2">
+                  <WeaknessList
+                    data={data}
+                    expandedWeaknessId={expandedWeaknessId}
+                    highlightedSection={highlightedSection}
+                    onWeaknessClick={handleWeaknessClick}
+                    onToggleExpansion={handleToggleWeaknessExpansion}
+                    onOptimizeWeakness={handleOptimizeWeakness}
+                  />
+                </div>
               </div>
             </div>
           </div>

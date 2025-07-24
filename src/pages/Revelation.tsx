@@ -7,10 +7,10 @@ import ReactMarkdown from 'react-markdown';
 // 导入logo
 import prismLogo from '@/assets/极简logo.jpg';
 import { useNavigate } from 'react-router-dom';
-import { sampleRevelationData } from '@/data/sampleData';
 import { resumeMarkdown } from '@/data/resumeExample';
 import { ResumeRenderer } from '@/components/resume/ResumeRenderer';
 import { CELEBRATION_CONFIG, PAGE_TEXT, EXPORT_CONFIG } from '@/data/revelationData';
+import { useAppContext } from '@/store/AppContext';
 
 interface RevelationProps {
   onBack: () => void;
@@ -231,9 +231,17 @@ const CelebrationModal = ({
 
 export const Revelation = () => {
   const navigate = useNavigate();
+  const { state } = useAppContext();
 
-  // 使用示例数据
-  const { originalScore, newScore, optimizedResume, completedImprovements } = sampleRevelationData;
+  // 从全局状态获取数据，提供fallback
+  const revelationData = state.revelationData || {
+    originalScore: 0,
+    newScore: 0,
+    optimizedResume: '暂无优化内容',
+    completedImprovements: []
+  };
+
+  const { originalScore, newScore, optimizedResume, completedImprovements } = revelationData;
 
   const [animatedOldScore, setAnimatedOldScore] = useState(0);
   const [animatedNewScore, setAnimatedNewScore] = useState(0);

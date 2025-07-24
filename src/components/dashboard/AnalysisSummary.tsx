@@ -1,7 +1,6 @@
 import { Card } from '@/components/ui/card';
 import {
   DASHBOARD_TEXT,
-  ANALYSIS_TAGS,
   CARD_STYLES,
   BUTTON_STYLES
 } from '@/constants/dashboard';
@@ -10,9 +9,10 @@ import { ANALYSIS_SUMMARY } from '@/data/dashboardData';
 interface AnalysisSummaryProps {
   isExpanded: boolean;
   onToggle: (expanded: boolean) => void;
+  content?: string;
 }
 
-export const AnalysisSummary = ({ isExpanded, onToggle }: AnalysisSummaryProps) => {
+export const AnalysisSummary = ({ isExpanded, onToggle, content }: AnalysisSummaryProps) => {
   return (
     <div className="relative">
       <Card className={CARD_STYLES.base}>
@@ -48,54 +48,11 @@ export const AnalysisSummary = ({ isExpanded, onToggle }: AnalysisSummaryProps) 
           {/* 精简的分析内容 - 条件渲染 */}
           {isExpanded && (
             <div className="relative p-3 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10">
-              <div className="space-y-2.5">
-                {/* 精简的分析点 */}
-                <div className="space-y-2.5">
-                  {ANALYSIS_SUMMARY.analysisPoints.map((point, index) => (
-                    <div key={point.type} className="flex items-start gap-2.5">
-                      <div
-                        className={`w-1.5 h-1.5 rounded-full mt-1.5 animate-pulse ${
-                          point.color === 'primary' ? 'bg-primary' :
-                          point.color === 'secondary' ? 'bg-secondary' :
-                          point.color === 'cyan' ? 'bg-cyan-400' :
-                          point.color === 'blue' ? 'bg-blue-400' :
-                          point.color === 'purple' ? 'bg-purple-400' :
-                          point.color === 'green' ? 'bg-green-400' :
-                          'bg-primary'
-                        }`}
-                        style={{ animationDelay: `${point.delay}s` }}
-                      />
-                      <p className="text-sm text-foreground leading-relaxed">
-                        <span className={`font-medium ${
-                          point.color === 'primary' ? 'text-primary' :
-                          point.color === 'secondary' ? 'text-secondary' :
-                          point.color === 'cyan' ? 'text-cyan-400' :
-                          point.color === 'blue' ? 'text-blue-400' :
-                          point.color === 'purple' ? 'text-purple-400' :
-                          point.color === 'green' ? 'text-green-400' :
-                          'text-primary'
-                        }`}>{point.label}：</span>
-                        {point.content}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 精简的标签 */}
-                <div className="flex items-center gap-1.5 pt-3 border-t border-border/30">
-                  <div className={`flex items-center gap-1 px-2 py-1 ${ANALYSIS_TAGS.structureClear.bgColor} border ${ANALYSIS_TAGS.structureClear.borderColor} rounded`}>
-                    <div className={`w-1 h-1 ${ANALYSIS_TAGS.structureClear.dotColor} rounded-full`} />
-                    <span className={`text-xs ${ANALYSIS_TAGS.structureClear.textColor} font-medium`}>{ANALYSIS_TAGS.structureClear.text}</span>
-                  </div>
-                  <div className={`flex items-center gap-1 px-2 py-1 ${ANALYSIS_TAGS.needsQuantification.bgColor} border ${ANALYSIS_TAGS.needsQuantification.borderColor} rounded`}>
-                    <div className={`w-1 h-1 ${ANALYSIS_TAGS.needsQuantification.dotColor} rounded-full`} />
-                    <span className={`text-xs ${ANALYSIS_TAGS.needsQuantification.textColor} font-medium`}>{ANALYSIS_TAGS.needsQuantification.text}</span>
-                  </div>
-                  <div className={`flex items-center gap-1 px-2 py-1 ${ANALYSIS_TAGS.canOptimize.bgColor} border ${ANALYSIS_TAGS.canOptimize.borderColor} rounded`}>
-                    <div className={`w-1 h-1 ${ANALYSIS_TAGS.canOptimize.dotColor} rounded-full`} />
-                    <span className={`text-xs ${ANALYSIS_TAGS.canOptimize.textColor} font-medium`}>{ANALYSIS_TAGS.canOptimize.text}</span>
-                  </div>
-                </div>
+              <div className="flex items-start gap-2.5">
+                <div className="w-1.5 h-1.5 rounded-full mt-1.5 bg-primary animate-pulse" />
+                <p className="text-sm text-foreground leading-relaxed">
+                  {content || ANALYSIS_SUMMARY.content}
+                </p>
               </div>
             </div>
           )}

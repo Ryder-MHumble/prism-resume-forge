@@ -39,7 +39,7 @@ export interface ResumeAnalysisResult {
 // 硅基流动API配置
 const API_BASE_URL = 'https://api.siliconflow.cn/v1';
 const API_KEY = 'sk-lemirlxnzimfmzpzgpnnmtbuzbjvyhnncccogoonkawomovf';
-const MODEL = 'Qwen/Qwen3-8B'; // 使用Qwen3-8B模型
+const MODEL = 'Qwen/Qwen3-8B';
 
 // 用于支持多用户并发的请求队列管理
 class RequestManager {

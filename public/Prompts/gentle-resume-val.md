@@ -15,6 +15,7 @@
 ### 输出格式（必须遵循以下 JSON 结构）
 
 {
+  \"summarization\": 整体评价,
   \"overall_score\": 整体评分,
   \"dimension_scores\": [
     {\"dimension\": \"核心能力\", \"score\": 分数},
