@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { EvaluationMode, ExtractedFile } from './types';
 
 type TestServiceType = 'llm' | 'custom' | 'pdf';
@@ -73,9 +72,10 @@ export const ServiceTestingDashboard = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden relative">
-      <CyberpunkBackground intensity="low" />
+      {/* 简化背景装饰 */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3 opacity-30" />
 
-      <div className="relative z-10 h-full bg-gradient-to-br from-background/95 via-background/90 to-background/95 backdrop-blur-sm flex flex-col">
+      <div className="relative z-10 h-full bg-gradient-to-br from-background via-background/95 to-background flex flex-col">
 
         {/* 顶部状态栏 */}
         <Header

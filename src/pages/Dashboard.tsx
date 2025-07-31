@@ -1,4 +1,3 @@
-import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { useDashboard } from '@/hooks/useDashboard';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { AnalysisSummary } from '@/components/dashboard/AnalysisSummary';
@@ -28,9 +27,9 @@ export const Dashboard = () => {
   } = useDashboard();
 
   return (
-    <div className="h-screen bg-background animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
-      {/* 赛博朋克背景特效 */}
-      <CyberpunkBackground intensity="low" className="opacity-30" />
+    <div className="h-screen bg-gradient-to-br from-background via-background/95 to-background animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
+      {/* 简化背景装饰 */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3 opacity-40" />
 
       {/* 顶部导航 */}
       <DashboardHeader onBack={handleBack} />

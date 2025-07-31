@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
 import { useNavigate } from 'react-router-dom';
 import { useFileUpload } from '@/hooks/useFileUpload';
@@ -67,13 +66,13 @@ export const Portal = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative">
-      {/* 赛博朋克背景 */}
-      <CyberpunkBackground intensity="medium" />
-
+    <div className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background">
+      {/* 简化的背景装饰 */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 opacity-50" />
+      
       {/* 加载状态覆盖层 */}
       {state.isLoading && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-background/80 flex items-center justify-center">
           <HandLoader
             size="lg"
             showText={true}
@@ -88,7 +87,7 @@ export const Portal = () => {
       )}
 
       {/* 主内容层 */}
-      <div className="relative z-10 h-full bg-gradient-to-br from-background/90 via-background/85 to-background/90 backdrop-blur-[2px]">
+      <div className="relative z-10 h-full">
         {/* Portal 头部 */}
         <PortalHeader />
 

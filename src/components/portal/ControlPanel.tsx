@@ -2,7 +2,7 @@ import { ArrowRight, Upload, Zap, Heart, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnalysisModeSelector } from '@/components/ui/AnalysisModeSelector';
 import { cn } from '@/lib/utils';
-import { PORTAL_TEXT, ANIMATION_CONFIG } from '@/constants/portal';
+import { PORTAL_TEXT } from '@/constants/portal';
 import { FileUploadArea } from './FileUploadArea';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
 import {
@@ -49,25 +49,16 @@ export const ControlPanel = ({
   };
 
   return (
-    <div className="w-2/5 flex flex-col border-r border-primary/20 backdrop-blur-sm relative">
+    <div className="w-2/5 flex flex-col border-r border-primary/20 relative">
       {/* 面板头部区域 */}
-      <div className="relative border-b border-primary/20 bg-gradient-to-r from-background/50 to-background/30 backdrop-blur-md">
-        {/* 扫描线动画 */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent animate-pulse"
-            style={{
-              top: '50%',
-              animationDuration: ANIMATION_CONFIG.scanAnimationDuration,
-              boxShadow: '0 0 10px rgba(34, 211, 238, 0.4)'
-            }} />
-        </div>
+      <div className="relative border-b border-primary/20 bg-gradient-to-r from-background/80 to-background/70">
 
         <div className="flex items-center justify-between py-5 px-8 relative z-10">
           {/* 左侧：当前阶段标题 */}
           <div className="flex items-center gap-3">
             {activePanel === 'upload' ? (
               <>
-                <Upload className="w-5 h-5 text-primary drop-shadow-lg" />
+                <Upload className="w-5 h-5 text-primary" />
                 <div>
                   <h3 className="text-lg font-semibold text-primary">{PORTAL_TEXT.steps.upload.title}</h3>
                   <p className="text-xs text-muted-foreground/80">{PORTAL_TEXT.steps.upload.subtitle}</p>
@@ -75,7 +66,7 @@ export const ControlPanel = ({
               </>
             ) : (
               <>
-                <Zap className="w-5 h-5 text-primary drop-shadow-lg" />
+                <Zap className="w-5 h-5 text-primary" />
                 <div>
                   <h3 className="text-lg font-semibold text-primary">{PORTAL_TEXT.steps.analysis.title}</h3>
                   <p className="text-xs text-muted-foreground/80">{PORTAL_TEXT.steps.analysis.subtitle}</p>
@@ -170,7 +161,7 @@ export const ControlPanel = ({
               </div>
 
               {/* 主要内容区域 */}
-              <div className="flex-1 relative z-10">
+              <div className="flex-1 relative z-10 min-h-0">
                 <AnalysisModeSelector
                   value={analysisMode}
                   onChange={setAnalysisMode}
@@ -178,7 +169,7 @@ export const ControlPanel = ({
               </div>
 
               {/* 右下角开始分析按钮 */}
-              <div className="relative z-10 flex justify-end mt-6">
+              <div className="relative z-10 flex justify-end mt-4 pt-3 border-t border-border/20 flex-shrink-0">
                 <Button
                   onClick={onStartAnalysis}
                   disabled={!canStartAnalysis}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Zap, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnalysisMode } from '@/components/prism/AnalysisMode';
@@ -12,6 +12,10 @@ export const AnalysisModeSelector: React.FC<AnalysisModeSelectorProps> = ({
   value,
   onChange,
 }) => {
+  const [mounted, setMounted] = useState(false);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
   const modes = [
     {
       id: 'hardcore' as const,
@@ -32,132 +36,170 @@ export const AnalysisModeSelector: React.FC<AnalysisModeSelectorProps> = ({
   ];
 
   const activeMode = modes.find(mode => mode.id === value) || modes[0];
+  const activeIndex = modes.findIndex(mode => mode.id === value);
+
+  // 更新滑块位置
+  const updateSliderPosition = () => {
+    if (sliderRef.current && tabRefs.current[activeIndex]) {
+      const activeTab = tabRefs.current[activeIndex];
+      if (activeTab) {
+        const rect = activeTab.getBoundingClientRect();
+        const containerRect = activeTab.parentElement?.getBoundingClientRect();
+        if (containerRect) {
+          const leftOffset = rect.left - containerRect.left;
+          sliderRef.current.style.left = `${leftOffset}px`;
+          sliderRef.current.style.width = `${rect.width}px`;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    const timeoutId = setTimeout(updateSliderPosition, 50);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      updateSliderPosition();
+    }
+  }, [value, mounted]);
 
   return (
-    <div className="space-y-0">
-      {/* Tab按钮区域 */}
-      <div className="flex gap-1">
-        {modes.map((mode) => {
-          const Icon = mode.icon;
-          const isActive = value === mode.id;
-
-          return (
-            <div key={mode.id} className="relative">
-              <button
-                onClick={() => onChange(mode.id)}
-                className={cn(
-                  "relative px-6 py-3 text-sm font-medium transition-all duration-300",
-                  "flex items-center gap-2 rounded-t-xl border border-b-0",
-                  isActive
-                    ? mode.color === 'primary'
-                      ? "text-primary bg-gradient-to-b from-primary/15 to-primary/8 border-primary/30 shadow-lg shadow-primary/10"
-                      : "text-secondary bg-gradient-to-b from-secondary/15 to-secondary/8 border-secondary/30 shadow-lg shadow-secondary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/10 bg-muted/5 border-muted/30 hover:border-muted/50"
-                )}
-              >
-                <Icon className="w-4 h-4" />
-                {mode.label}
-              </button>
-
-              {/* 选中状态的连接条 */}
-              {isActive && (
-                <div className={cn(
-                  "absolute -bottom-px left-0 right-0 h-2 rounded-b-lg transition-all duration-300 border-l border-r",
-                  mode.color === 'primary'
-                    ? "bg-gradient-to-b from-primary/15 to-primary/8 border-primary/30"
-                    : "bg-gradient-to-b from-secondary/15 to-secondary/8 border-secondary/30"
-                )} />
+    <div className="space-y-4">
+      {/* Modern Tab Selector */}
+      <div className="space-y-4">
+        {/* Tab Container */}
+        <div className="relative">
+          {/* Background Container */}
+          <div className="relative p-1 rounded-2xl bg-muted/20 border border-border/30">
+            {/* Sliding Background */}
+            <div
+              ref={sliderRef}
+              className={cn(
+                "absolute top-1 h-[calc(100%-8px)] rounded-xl transition-all duration-300 ease-out",
+                activeMode.color === 'primary'
+                  ? "bg-primary/10 border-primary/20"
+                  : "bg-secondary/10 border-secondary/20"
               )}
+              style={{ 
+                transform: mounted ? 'none' : 'translateX(-100%)',
+                opacity: mounted ? 1 : 0
+              }}
+            />
+
+            {/* Tab Buttons */}
+            <div className="relative flex">
+              {modes.map((mode, index) => {
+                const Icon = mode.icon;
+                const isActive = value === mode.id;
+
+                return (
+                  <button
+                    key={mode.id}
+                    ref={el => tabRefs.current[index] = el}
+                    onClick={() => onChange(mode.id)}
+                    className={cn(
+                      "relative flex-1 px-6 py-4 text-sm font-medium transition-colors duration-200",
+                      "flex items-center justify-center gap-2 rounded-xl",
+                      isActive
+                        ? mode.color === 'primary'
+                          ? "text-primary"
+                          : "text-secondary"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="font-semibold">{mode.label}</span>
+                    
+                    {/* Active Indicator */}
+                    {isActive && (
+                      <div className={cn(
+                        "absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 rounded-full",
+                        mode.color === 'primary' ? "bg-primary" : "bg-secondary"
+                      )} />
+                    )}
+                  </button>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
-
-      {/* 内容区域 */}
-      <div className={cn(
-        "relative rounded-xl rounded-tl-none p-8 backdrop-blur-md overflow-hidden transition-all duration-500 border",
-        activeMode.color === 'primary'
-          ? "bg-gradient-to-b from-primary/15 to-primary/8 border-primary/30 shadow-lg shadow-primary/10"
-          : "bg-gradient-to-b from-secondary/15 to-secondary/8 border-secondary/30 shadow-lg shadow-secondary/10"
-      )}>
-        {/* 背景装饰 */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className={cn(
-            "absolute inset-0 bg-gradient-to-br via-transparent to-transparent",
-            activeMode.color === 'primary' ? "from-primary/10" : "from-secondary/10"
-          )} />
-
-          {/* 装饰性粒子 */}
-          <div className="absolute inset-0">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "absolute w-1 h-1 rounded-full animate-pulse opacity-60",
-                  activeMode.color === 'primary' ? "bg-primary" : "bg-secondary"
-                )}
-                style={{
-                  left: `${20 + i * 20}%`,
-                  top: `${15 + i * 25}%`,
-                  animationDelay: `${i * 0.5}s`,
-                  animationDuration: '2s'
-                }}
-              />
-            ))}
-          </div>
-
-          {/* 右下角图标装饰 */}
-          <div className="absolute bottom-8 right-8 w-20 h-20 opacity-15">
-            <activeMode.icon className={cn(
-              "w-full h-full",
-              activeMode.color === 'primary' ? "text-primary" : "text-secondary"
-            )} />
           </div>
         </div>
+      </div>
 
-        {/* 内容 */}
-        <div className="relative z-10 space-y-6">
-          {/* 模式标题 */}
-          <div className="flex items-center gap-4">
+      {/* Content Area */}
+      <div className={cn(
+        "relative rounded-2xl p-6 overflow-hidden transition-colors duration-300 border",
+        "bg-gradient-to-br",
+        activeMode.color === 'primary'
+          ? "from-primary/5 to-primary/3 border-primary/20"
+          : "from-secondary/5 to-secondary/3 border-secondary/20"
+      )}>
+        {/* Simple Background Decoration */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Single subtle decoration */}
+          <div className={cn(
+            "absolute bottom-0 right-0 w-20 h-20 rounded-full opacity-5",
+            activeMode.color === 'primary' ? "bg-primary" : "bg-secondary"
+          )} />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 space-y-4">
+          {/* Header */}
+          <div className="flex items-start gap-4">
             <div className={cn(
-              "p-3 rounded-xl transition-all duration-500",
+              "p-4 rounded-2xl transition-colors duration-200",
               activeMode.color === 'primary'
-                ? "bg-primary/20 text-primary"
-                : "bg-secondary/20 text-secondary"
+                ? "bg-primary/10 text-primary"
+                : "bg-secondary/10 text-secondary"
             )}>
-              <activeMode.icon className="w-6 h-6" />
+              <activeMode.icon className="w-7 h-7" />
             </div>
-            <div>
+            <div className="flex-1">
               <h3 className={cn(
-                "text-2xl font-bold transition-all duration-500",
+                "text-2xl font-bold transition-colors duration-200 mb-1",
                 activeMode.color === 'primary' ? "text-primary" : "text-secondary"
               )}>
                 {activeMode.label}
               </h3>
-              <p className="text-sm text-muted-foreground font-mono">
+              <p className="text-sm text-muted-foreground font-mono tracking-wider">
                 {activeMode.id === 'hardcore' ? 'Hardcore Mode' : 'Supportive Mode'}
               </p>
             </div>
           </div>
 
-          {/* 详细描述 */}
+          {/* Description */}
           <div className="space-y-4">
             <p className="text-base leading-relaxed text-muted-foreground">
               {activeMode.description}
             </p>
 
-            {/* 特点列表 */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Features Grid */}
+            <div className="grid grid-cols-2 gap-3 mt-4">
               {activeMode.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
+                <div 
+                  key={index} 
+                  className="flex items-center gap-3 text-sm p-3 rounded-xl bg-background/50 backdrop-blur-sm border border-border/50"
+                >
                   <div className={cn(
-                    "w-1 h-1 rounded-full",
+                    "w-2 h-2 rounded-full flex-shrink-0",
                     activeMode.color === 'primary' ? "bg-primary" : "bg-secondary"
                   )} />
-                  <span className="text-muted-foreground">{feature}</span>
+                  <span className="text-muted-foreground font-medium">{feature}</span>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Bottom Status */}
+          <div className="flex items-center gap-2 pt-4 border-t border-border/30">
+            <div className={cn(
+              "w-2 h-2 rounded-full",
+              activeMode.color === 'primary' ? "bg-primary" : "bg-secondary"
+            )} />
+            <span className="text-xs text-muted-foreground font-mono">模式已激活</span>
           </div>
         </div>
       </div>
