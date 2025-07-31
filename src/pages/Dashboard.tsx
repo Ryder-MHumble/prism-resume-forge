@@ -49,16 +49,6 @@ export const Dashboard = () => {
 
             {/* 简历渲染区 */}
             <div className="relative">
-              {/* 优化的磨砂玻璃渐变过渡效果 */}
-              <div className="absolute top-0 left-0 right-0 h-12 z-10 pointer-events-none">
-                {/* 主渐变层 - 背景色渐变 */}
-                <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 via-background/85 via-background/70 via-background/50 via-background/30 via-background/15 to-transparent" />
-                {/* 模糊层 - 增强玻璃效果 */}
-                <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 via-background/15 via-background/8 to-transparent backdrop-blur-[2px]" />
-                {/* 细微光泽层 - 增加质感 */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-white/[0.01] to-transparent" />
-              </div>
-
               <ResumeViewer
                 isAnalysisSummaryExpanded={isAnalysisSummaryExpanded}
                 scrollContainerRef={scrollContainerRef}

@@ -15,41 +15,32 @@ interface AnalysisSummaryProps {
 export const AnalysisSummary = ({ isExpanded, onToggle, content }: AnalysisSummaryProps) => {
   return (
     <div className="relative">
-      <Card className={CARD_STYLES.base}>
-        {/* 霓虹边框效果 */}
-        <div className={CARD_STYLES.neonBorder} />
-
-        {/* 顶部装饰线 */}
-        <div className={CARD_STYLES.topDecorationLine} />
-
-        <div className="relative z-10 p-3 pb-3">
-          {/* 精简的标题区域 */}
+      <Card className="border border-border/50 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="relative p-4">
+          {/* 优雅的标题区域 */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-                <div className="w-8 h-px bg-gradient-to-r from-cyan-400/50 to-transparent" />
-              </div>
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full" />
               <div>
-                <h3 className="text-sm font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                <h3 className="text-base font-semibold text-foreground">
                   {DASHBOARD_TEXT.analysisSummary.title}
                 </h3>
-                <p className="text-xs text-muted-foreground/80">{DASHBOARD_TEXT.analysisSummary.subtitle}</p>
+                <p className="text-xs text-muted-foreground/70">{DASHBOARD_TEXT.analysisSummary.subtitle}</p>
               </div>
             </div>
             <button
               onClick={() => onToggle(!isExpanded)}
-              className={BUTTON_STYLES.expandCollapse}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted/80 rounded-md transition-all duration-200"
             >
               {isExpanded ? DASHBOARD_TEXT.actionButtons.expandCollapse.collapse : DASHBOARD_TEXT.actionButtons.expandCollapse.expand}
             </button>
           </div>
 
-          {/* 精简的分析内容 - 条件渲染 */}
+          {/* 优雅的分析内容 */}
           {isExpanded && (
-            <div className="relative p-3 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10">
-              <div className="flex items-start gap-2.5">
-                <div className="w-1.5 h-1.5 rounded-full mt-1.5 bg-primary animate-pulse" />
+            <div className="relative p-4 rounded-lg bg-muted/30 border border-border/30">
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full mt-2 bg-blue-500 flex-shrink-0" />
                 <p className="text-sm text-foreground leading-relaxed">
                   {content || ANALYSIS_SUMMARY.content}
                 </p>

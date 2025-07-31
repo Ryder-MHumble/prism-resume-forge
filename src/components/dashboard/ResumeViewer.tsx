@@ -1,4 +1,5 @@
 import { ArrowUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ResumeRenderer } from '@/components/resume/ResumeRenderer';
 import { resumeMarkdown } from '@/data/resumeExample';
@@ -19,6 +20,14 @@ export const ResumeViewer = ({
   onScroll,
   onScrollToTop
 }: ResumeViewerProps) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    setIsScrolled(scrollTop > 20);
+    onScroll(e);
+  };
+
   return (
     <div className={cn(
       "relative overflow-hidden transition-all duration-500 ease-in-out",
@@ -26,13 +35,23 @@ export const ResumeViewer = ({
         ? "h-[calc(100vh-16rem)]"
         : "h-[calc(100vh-10rem)]"
     )}>
-      {/* 仅保留底部模糊遮罩 */}
+      {/* 动态顶部磨砂玻璃渐变效果 - 仅在滚动时显示 */}
+      <div className={cn(
+        "absolute top-0 left-0 right-0 h-12 z-10 pointer-events-none transition-opacity duration-300",
+        isScrolled ? "opacity-100" : "opacity-0"
+      )}>
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 via-background/80 via-background/60 via-background/40 via-background/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 via-background/15 to-transparent backdrop-blur-[3px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-white/[0.01] to-transparent" />
+      </div>
+
+      {/* 底部模糊遮罩 */}
       <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
 
       {/* 滚动内容 */}
       <div
         ref={scrollContainerRef}
-        onScroll={onScroll}
+        onScroll={handleScroll}
         className="h-full overflow-y-auto scrollbar-hide"
       >
         <ResumeRenderer
