@@ -7,7 +7,7 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ onBack }: DashboardHeaderProps) => {
   return (
-    <header className="relative border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 flex-shrink-0">
+    <header className="relative border-b border-border/30 bg-transparent backdrop-blur-sm z-10 flex-shrink-0">
       {/* 顶部装饰光带 */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
       

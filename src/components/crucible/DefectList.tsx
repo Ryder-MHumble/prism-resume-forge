@@ -183,7 +183,7 @@ export const DefectList: React.FC<DefectListProps> = ({
                     <div className="absolute left-0 top-2 bottom-2 w-1 bg-gradient-to-b from-green-500 via-green-500/80 to-green-500/60 rounded-r-full" />
                   )}
 
-                                          <div className="relative z-10 p-4 pl-5">
+                  <div className="relative z-10 p-4 pl-5">
                     <div className="flex items-start gap-3">
                       {/* 状态指示器 */}
                       <div className={cn(
@@ -192,8 +192,8 @@ export const DefectList: React.FC<DefectListProps> = ({
                         isCompleted
                           ? "bg-green-500/20 border-green-500/40 text-green-500"
                           : isActive
-                          ? impactStyle.activeIconBg + " " + impactStyle.activeIconBorder + " " + impactStyle.activeIconText + " shadow-sm " + impactStyle.activeShadow
-                          : "bg-card/50 " + impactStyle.iconColor + "/60"
+                            ? impactStyle.activeIconBg + " " + impactStyle.activeIconBorder + " " + impactStyle.activeIconText + " shadow-sm " + impactStyle.activeShadow
+                            : "bg-card/50 " + impactStyle.iconColor + "/60"
                       )}>
                         {isCompleted ? (
                           <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -212,10 +212,10 @@ export const DefectList: React.FC<DefectListProps> = ({
                           isActive && isCompleted
                             ? "text-green-300 font-semibold"
                             : isActive
-                            ? impactStyle.activeText + " font-semibold"
-                            : isCompleted
-                            ? "text-green-400"
-                            : impactStyle.textColor
+                              ? impactStyle.activeText + " font-semibold"
+                              : isCompleted
+                                ? "text-green-400"
+                                : impactStyle.textColor
                         )}>
                           {defect.title || `问题${index + 1}`}
                         </h3>
@@ -228,10 +228,10 @@ export const DefectList: React.FC<DefectListProps> = ({
                             isActive && isCompleted
                               ? "bg-green-500/20 border-green-500/40 text-green-300"
                               : isActive
-                              ? impactStyle.activeTagBg + " " + impactStyle.activeTagBorder + " " + impactStyle.activeTagText
-                              : isCompleted
-                              ? "bg-green-500/15 border-green-500/30 text-green-500"
-                              : "bg-card/50 " + impactStyle.borderColor + " " + impactStyle.textColor
+                                ? impactStyle.activeTagBg + " " + impactStyle.activeTagBorder + " " + impactStyle.activeTagText
+                                : isCompleted
+                                  ? "bg-green-500/15 border-green-500/30 text-green-500"
+                                  : "bg-card/50 " + impactStyle.borderColor + " " + impactStyle.textColor
                           )}>
                             {defect.impact}
                           </span>
@@ -259,8 +259,8 @@ export const DefectList: React.FC<DefectListProps> = ({
                         isActive && isCompleted
                           ? "bg-green-500/25 text-green-400 transform rotate-90"
                           : isActive
-                          ? impactStyle.activeIconBg + " " + impactStyle.activeIconText + " transform rotate-90"
-                          : "bg-transparent text-muted-foreground/40 group-hover:text-muted-foreground/60"
+                            ? impactStyle.activeIconBg + " " + impactStyle.activeIconText + " transform rotate-90"
+                            : "bg-transparent text-muted-foreground/40 group-hover:text-muted-foreground/60"
                       )}>
                         <div className="w-1 h-1 rounded-full bg-current" />
                       </div>
@@ -278,42 +278,42 @@ export const DefectList: React.FC<DefectListProps> = ({
           </div>
 
           {/* 底部渐变遮罩 */}
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card/40 via-card/20 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-card/40 via-card/20 to-transparent pointer-events-none" />
         </div>
       </div>
 
-                  {/* 底部生成简历按钮 - 紧贴底部 */}
-            <div className="pt-3 mt-2 border-t border-border/50">
-              <Button
-                onClick={onGenerateResume}
-                className={cn(
-                  "w-full py-4 font-semibold rounded-xl transition-all duration-300",
-                  "shadow-lg backdrop-blur-sm border border-transparent",
-                  completedDefects.size === defects.length && defects.length > 0
-                    ? [
-                        "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600",
-                        "hover:from-cyan-500 hover:via-blue-600 hover:to-purple-700",
-                        "hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-[1.02]",
-                        "active:scale-[0.98] cursor-pointer",
-                        "text-white"
-                      ]
-                    : [
-                        "bg-gradient-to-r from-muted/40 via-muted/50 to-muted/40",
-                        "text-muted-foreground/60 cursor-not-allowed",
-                        "border-border/30"
-                      ]
-                )}
-                disabled={completedDefects.size !== defects.length || defects.length === 0}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  {completedDefects.size === defects.length && defects.length > 0 ? (
-                    <span>生成我的专属简历</span>
-                  ) : (
-                    <span>完成所有问题后可生成简历 ({completedDefects.size}/{defects.length})</span>
-                  )}
-                </div>
-              </Button>
-            </div>
+      {/* 底部生成简历按钮 - 紧贴底部 */}
+      <div className="pt-3 mt-2 border-t border-border/50">
+        <Button
+          onClick={onGenerateResume}
+          className={cn(
+            "w-full py-4 font-semibold rounded-xl transition-all duration-300",
+            "shadow-lg backdrop-blur-sm border border-transparent",
+            completedDefects.size === defects.length && defects.length > 0
+              ? [
+                "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600",
+                "hover:from-cyan-500 hover:via-blue-600 hover:to-purple-700",
+                "hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-[1.02]",
+                "active:scale-[0.98] cursor-pointer",
+                "text-white"
+              ]
+              : [
+                "bg-gradient-to-r from-muted/40 via-muted/50 to-muted/40",
+                "text-muted-foreground/60 cursor-not-allowed",
+                "border-border/30"
+              ]
+          )}
+          disabled={completedDefects.size !== defects.length || defects.length === 0}
+        >
+          <div className="flex items-center justify-center gap-2">
+            {completedDefects.size === defects.length && defects.length > 0 ? (
+              <span>生成我的专属简历</span>
+            ) : (
+              <span>完成所有问题后可生成简历 ({completedDefects.size}/{defects.length})</span>
+            )}
+          </div>
+        </Button>
+      </div>
     </div>
   );
 };

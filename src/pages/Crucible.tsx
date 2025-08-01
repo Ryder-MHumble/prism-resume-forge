@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppContext } from '@/store/AppContext';
 import { CrucibleHeader, DefectList, ChatArea, ProgressPanel } from '@/components/crucible';
+import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 
 const Crucible = () => {
   const navigate = useNavigate();
@@ -92,7 +93,10 @@ const Crucible = () => {
   };
 
   return (
-    <div className="h-screen bg-background overflow-hidden flex flex-col">
+    <div className="h-screen bg-background/80 overflow-hidden flex flex-col relative">
+      {/* 背景动画 - 底层 */}
+      <CyberpunkBackground intensity="medium" />
+
       <CrucibleHeader onBack={handleBack} />
 
       {/* 主要内容区域 */}

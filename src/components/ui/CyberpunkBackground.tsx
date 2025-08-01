@@ -179,7 +179,7 @@ export const CyberpunkBackground = ({
     }
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 15, 20, 0.05)';
+      ctx.fillStyle = 'rgba(0, 5, 10, 0.02)';
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
       // 绘制网格线
@@ -344,7 +344,7 @@ export const CyberpunkBackground = ({
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed inset-0 pointer-events-none z-0 ${className}`}
+      className={`fixed inset-0 pointer-events-none z-[-1] ${className}`}
       style={{
         width: dimensions.width,
         height: dimensions.height

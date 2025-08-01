@@ -1,22 +1,19 @@
 import { useDashboard } from '@/hooks/useDashboard';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { AnalysisSummary } from '@/components/dashboard/AnalysisSummary';
 import { ResumeViewer } from '@/components/dashboard/ResumeViewer';
 import { RadarAnalysis } from '@/components/dashboard/RadarAnalysis';
 import { WeaknessList } from '@/components/dashboard/WeaknessList';
+import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 // import { DASHBOARD_UI } from '@/constants/dashboard';
 
 export const Dashboard = () => {
   const {
     data,
-    analysisSummary,
     highlightedSection,
     showScrollToTop,
-    isAnalysisSummaryExpanded,
     isRadarChartExpanded,
     expandedWeaknessId,
     scrollContainerRef,
-    setIsAnalysisSummaryExpanded,
     setIsRadarChartExpanded,
     handleWeaknessClick,
     handleToggleWeaknessExpansion,
@@ -27,7 +24,10 @@ export const Dashboard = () => {
   } = useDashboard();
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-background/95 to-background animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
+    <div className="h-screen bg-gradient-to-br from-background/80 via-background/90 to-background/80 animate-in fade-in duration-700 overflow-hidden flex flex-col relative">
+      {/* 背景动画 - 底层 */}
+      <CyberpunkBackground intensity="low" />
+
       {/* 简化背景装饰 */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3 opacity-40" />
 
@@ -35,21 +35,14 @@ export const Dashboard = () => {
       <DashboardHeader onBack={handleBack} />
 
       {/* 主内容 - 重新设计的布局 */}
-      <main className="container mx-auto px-4 py-6 flex-1 overflow-hidden">
+      <main className="container mx-auto px-4 pt-6 pb-0 flex-1 overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
-          {/* 左侧区域 - 包含智能分析总结和简历渲染区 */}
-          <div className="md:col-span-6 space-y-3 animate-in slide-in-from-left duration-500 delay-100">
-            {/* 智能分析总结模块 */}
-            <AnalysisSummary
-              isExpanded={isAnalysisSummaryExpanded}
-              onToggle={setIsAnalysisSummaryExpanded}
-              content={analysisSummary}
-            />
-
+          {/* 左侧区域 - 简历渲染区 */}
+          <div className="md:col-span-6 animate-in slide-in-from-left duration-500 delay-100">
             {/* 简历渲染区 */}
             <div className="relative">
               <ResumeViewer
-                isAnalysisSummaryExpanded={isAnalysisSummaryExpanded}
+                isAnalysisSummaryExpanded={false}
                 scrollContainerRef={scrollContainerRef}
                 showScrollToTop={showScrollToTop}
                 onScroll={handleScroll}

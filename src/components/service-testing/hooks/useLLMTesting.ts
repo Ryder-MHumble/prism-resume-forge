@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { analyzeResumeWithLLM, analyzeCustomContent } from '@/services/llmService';
+import { analyzeResumeWithLLM } from '@/services/analysisService';
+import { callLLM, LLMRequest } from '@/services/llmService';
 import { LLMTestResult } from '@/types';
 import { EvaluationMode } from '../types';
 
@@ -69,22 +70,29 @@ export const useLLMTesting = (updateActiveRequestsCount: () => void) => {
     const requestId = `custom_${Date.now()}`;
     const startTime = Date.now();
 
+    const systemPrompt = customPrompt.trim() || '你是一个专业的简历分析助手，请分析用户提供的内容。';
+    const userQuery = customContent.trim() || '请分析这份简历内容。';
+
     const testResult: LLMTestResult = {
       requestId,
       timestamp: startTime,
       status: 'pending',
       prompt: customPrompt || '使用默认系统提示词',
-      systemPrompt: customPrompt || '默认系统提示词',
-      inputContent: customContent || '默认内容'
+      systemPrompt,
+      inputContent: userQuery
     };
     setLlmTestResults(prev => [testResult, ...prev.slice(0, 9)]);
     updateActiveRequestsCount();
 
     try {
-      const result = await analyzeCustomContent(
-        customPrompt.trim() || undefined,
-        customContent.trim() || undefined
-      );
+      const llmRequest: LLMRequest = {
+        systemPrompt,
+        userQuery,
+        temperature: 0.7,
+        maxTokens: 5120
+      };
+
+      const result = await callLLM(llmRequest);
       const duration = Date.now() - startTime;
 
       setLlmTestResults(prev =>

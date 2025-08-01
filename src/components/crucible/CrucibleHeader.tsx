@@ -8,7 +8,7 @@ interface CrucibleHeaderProps {
 
 export const CrucibleHeader: React.FC<CrucibleHeaderProps> = ({ onBack }) => {
   return (
-    <header className="border-b border-border/50 bg-gradient-to-r from-background via-background/95 to-background backdrop-blur-sm z-10 flex-shrink-0">
+    <header className="border-b border-border/30 bg-transparent backdrop-blur-sm z-10 flex-shrink-0 relative">
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Button

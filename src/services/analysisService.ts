@@ -8,12 +8,186 @@ import {
   ApiResponse
 } from '@/types';
 import { sampleDashboardData, sampleWeaknessItems, sampleRevelationData } from '@/data/sampleData';
+import { callLLM, LLMRequest } from './llmService';
+
+// 简历分析相关类型定义
+export interface ResumeAnalysisResult {
+  overall_score: number;
+  dimension_scores: Array<{
+    dimension: string;
+    score: number;
+  }>;
+  issues: Array<{
+    id: number;
+    title: string;
+    description: string;
+    impact: string;
+    original: string;
+    suggestion: string;
+  }>;
+}
+
+// 问题列表数据字典 - 用于后续LLM服务节点
+export const IssuesRegistry: Map<string, ResumeAnalysisResult['issues']> = new Map();
+
+/**
+ * 获取系统提示词
+ */
+const getSystemPrompt = async (mode: 'gentle' | 'mean' = 'mean'): Promise<string> => {
+  const promptFile = mode === 'gentle' ? '/Prompts/gentle-resume-val.md' : '/Prompts/mean-resume-val.md';
+  const response = await fetch(promptFile);
+  if (!response.ok) {
+    throw new Error('获取系统提示词失败');
+  }
+  const content = await response.text();
+
+  try {
+    // 先尝试直接解析JSON
+    const promptData = JSON.parse(content);
+    return promptData.content;
+  } catch (error) {
+    console.warn('直接JSON解析失败，开始清理内容:', error);
+
+    try {
+      // 方法1: 智能清理转义字符
+      let cleanedContent = content
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\');
+
+      const promptData = JSON.parse(cleanedContent);
+      return promptData.content;
+    } catch (secondError) {
+      console.warn('第一种清理方法失败，尝试第二种方法:', secondError);
+
+      try {
+        // 方法2: 手动构建有效的JSON字符串
+        const contentMatch = content.match(/"content":\s*"([\s\S]*?)"\s*}/);
+        if (contentMatch && contentMatch[1]) {
+          let contentValue = contentMatch[1];
+
+          contentValue = contentValue
+            .replace(/\\"/g, '"')
+            .replace(/\\\\/g, '\\')
+            .replace(/\\n/g, '\n')
+            .replace(/\\t/g, '\t');
+
+          return contentValue;
+        }
+
+        throw new Error('无法提取content字段');
+      } catch (thirdError) {
+        console.warn('第二种清理方法失败，尝试第三种方法:', thirdError);
+
+        try {
+          const match = content.match(/"content":\s*"(.*?)(?="\s*})/s);
+          if (match && match[1]) {
+            return match[1]
+              .replace(/\\"/g, '"')
+              .replace(/\\\\/g, '\\')
+              .replace(/\\n/g, '\n')
+              .replace(/\\t/g, '\t');
+          }
+
+          throw new Error('无法通过正则表达式提取content');
+        } catch (fourthError) {
+          console.error('所有解析方法都失败了');
+          console.error('原始内容前200字符:', content.substring(0, 200));
+          console.error('最后错误:', fourthError);
+
+          throw new Error('系统提示词文件格式错误，无法解析');
+        }
+      }
+    }
+  }
+};
+
+/**
+ * 获取用户简历内容
+ */
+const getUserContent = async (): Promise<string> => {
+  try {
+    const response = await fetch('/Prompts/resume.md');
+    if (!response.ok) {
+      throw new Error('获取简历内容失败');
+    }
+    return await response.text();
+  } catch (error) {
+    console.error('获取简历内容失败:', error);
+    throw error;
+  }
+};
+
+/**
+ * 解析LLM响应为结构化数据
+ */
+const parseAnalysisResult = (content: string): ResumeAnalysisResult => {
+  if (!content || content.trim() === '') {
+    throw new Error('LLM响应内容为空');
+  }
+
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    console.error('解析LLM响应失败:', error);
+    console.error('响应内容:', content);
+    throw new Error(`响应格式错误: ${error instanceof Error ? error.message : '未知错误'}`);
+  }
+};
 
 /**
  * 模拟API延迟
  */
 const simulateApiDelay = (ms: number = 2000) =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * 执行简历分析（返回原始LLM结果）
+ * 主要用于Portal页面，保持与原有状态管理逻辑的兼容性
+ */
+export const analyzeResumeWithLLM = async (
+  mode: 'gentle' | 'mean' = 'mean'
+): Promise<ApiResponse<ResumeAnalysisResult>> => {
+  try {
+    // 获取系统提示词和用户简历内容
+    const [systemPrompt, userContent] = await Promise.all([
+      getSystemPrompt(mode),
+      getUserContent()
+    ]);
+
+    // 调用LLM进行分析
+    const llmRequest: LLMRequest = {
+      systemPrompt,
+      userQuery: userContent,
+      temperature: 0.7,
+      maxTokens: 5120
+    };
+
+    const llmResponse = await callLLM(llmRequest);
+
+    if (!llmResponse.success) {
+      throw new Error(llmResponse.error || 'LLM分析失败');
+    }
+
+    // 解析LLM响应
+    const analysisResult = parseAnalysisResult(llmResponse.data!.content);
+
+    // 将问题列表存储到数据字典中，使用分析会话ID作为键
+    const sessionId = llmResponse.data!.sessionId;
+    IssuesRegistry.set(sessionId, analysisResult.issues);
+
+    return {
+      success: true,
+      data: analysisResult,
+      message: '简历分析完成'
+    };
+  } catch (error) {
+    console.error('简历分析失败:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '分析失败，请重试'
+    };
+  }
+};
 
 /**
  * 执行简历分析
@@ -23,24 +197,64 @@ export const analyzeResume = async (
   mode: AnalysisMode
 ): Promise<ApiResponse<DashboardData>> => {
   try {
-    await simulateApiDelay();
+    // 获取系统提示词和用户简历内容
+    const [systemPrompt, userContent] = await Promise.all([
+      getSystemPrompt(mode === 'gentle' ? 'gentle' : 'mean'),
+      getUserContent()
+    ]);
 
-    // 这里应该是实际的分析逻辑
-    // 目前使用示例数据
-    const analysisResult: DashboardData = {
-      ...sampleDashboardData,
+    // 调用LLM进行分析
+    const llmRequest: LLMRequest = {
+      systemPrompt,
+      userQuery: userContent,
+      temperature: 0.7,
+      maxTokens: 5120
+    };
+
+    const llmResponse = await callLLM(llmRequest);
+
+    if (!llmResponse.success) {
+      throw new Error(llmResponse.error || 'LLM分析失败');
+    }
+
+    // 解析LLM响应
+    const analysisResult = parseAnalysisResult(llmResponse.data!.content);
+
+    // 将问题列表存储到数据字典中，使用分析会话ID作为键
+    const sessionId = llmResponse.data!.sessionId;
+    IssuesRegistry.set(sessionId, analysisResult.issues);
+
+    // 转换为DashboardData格式
+    const dashboardData: DashboardData = {
+      score: analysisResult.overall_score,
       mode,
+      comment: `综合评分 ${analysisResult.overall_score}/100，发现 ${analysisResult.issues.length} 个需要优化的问题`,
+      radarData: analysisResult.dimension_scores.map(dim => ({
+        category: dim.dimension,
+        value: dim.score,
+        maxValue: 5
+      })),
+      weaknesses: analysisResult.issues.map(issue => ({
+        id: issue.id,
+        title: issue.title,
+        description: issue.description,
+        impact: issue.impact,
+        suggestion: issue.suggestion,
+        original: issue.original
+      })),
+      resumeContent: userContent
     };
 
     return {
       success: true,
-      data: analysisResult,
+      data: dashboardData,
       message: '简历分析完成'
     };
   } catch (error) {
+    console.error('简历分析失败:', error);
     return {
       success: false,
-      error: '分析失败，请重试'
+      error: error instanceof Error ? error.message : '分析失败，请重试'
     };
   }
 };

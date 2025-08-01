@@ -7,7 +7,7 @@ import { ControlPanel } from '@/components/portal/ControlPanel';
 import { HeroSection } from '@/components/portal/HeroSection';
 import { useAppContext } from '@/store/AppContext';
 import { HandLoader } from '@/components/common/HandLoader';
-import { analyzeResumeWithLLM } from '@/services/llmService';
+import { analyzeResumeWithLLM } from '@/services/analysisService';
 
 interface PortalProps {
   onStartAnalysis: (files: { resume?: File; jd?: File }, mode: AnalysisMode) => void;

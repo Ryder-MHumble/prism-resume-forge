@@ -31,19 +31,13 @@ export const ResumeViewer = ({
   return (
     <div className={cn(
       "relative overflow-hidden transition-all duration-500 ease-in-out",
-      isAnalysisSummaryExpanded
-        ? "h-[calc(100vh-16rem)]"
-        : "h-[calc(100vh-10rem)]"
+      "h-[calc(100vh-6rem)]"
     )}>
-      {/* 动态顶部磨砂玻璃渐变效果 - 仅在滚动时显示 */}
+      {/* 动态顶部黑色渐变效果 - 仅在滚动时显示 */}
       <div className={cn(
-        "absolute top-0 left-0 right-0 h-12 z-10 pointer-events-none transition-opacity duration-300",
+        "absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none transition-opacity duration-300",
         isScrolled ? "opacity-100" : "opacity-0"
-      )}>
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 via-background/80 via-background/60 via-background/40 via-background/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 via-background/15 to-transparent backdrop-blur-[3px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-white/[0.01] to-transparent" />
-      </div>
+      )} />
 
       {/* 底部模糊遮罩 */}
       <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
@@ -58,7 +52,7 @@ export const ResumeViewer = ({
           content={resumeMarkdown}
           title={DASHBOARD_TEXT.resumeSection.title}
           showHeader={false}
-          className="border rounded-xl overflow-hidden text-sm"
+          className="overflow-hidden text-sm"
         />
       </div>
 
