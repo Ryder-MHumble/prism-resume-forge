@@ -1,9 +1,9 @@
-import { Settings, Brain, FileText, Play, Trash2 } from 'lucide-react';
+import { Settings, Brain, FileText, Play, Trash2, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SERVICE_TYPES, EVALUATION_MODES } from '../utils/constants';
 import { EvaluationMode } from '../types';
-type TestServiceType = 'llm' | 'custom' | 'pdf';
+type TestServiceType = 'llm' | 'custom' | 'pdf' | 'crucible';
 
 interface ServiceSelectorProps {
   activeServiceType: TestServiceType;
@@ -47,7 +47,9 @@ export const ServiceSelector = ({
 
           <div className="space-y-3">
             {SERVICE_TYPES.map(({ type, label, desc, color }) => {
-              const IconComponent = type === 'llm' ? Brain : type === 'custom' ? Settings : FileText;
+              const IconComponent = type === 'llm' ? Brain :
+                                   type === 'custom' ? Settings :
+                                   type === 'crucible' ? MessageCircle : FileText;
               return (
                 <button
                   key={type}

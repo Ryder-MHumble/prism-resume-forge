@@ -21,6 +21,25 @@ export interface LLMResponse {
   requestId: string;
 }
 
+// 流式响应类型定义
+export interface LLMStreamChunk {
+  content: string;
+  finished: boolean;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  sessionId: string;
+  requestId: string;
+}
+
+export interface LLMStreamRequest extends LLMRequest {
+  onChunk?: (chunk: LLMStreamChunk) => void;
+  onComplete?: (response: LLMResponse) => void;
+  onError?: (error: Error) => void;
+}
+
 // 默认LLM API配置
 const DEFAULT_API_CONFIG = {
   baseUrl: 'https://api.siliconflow.cn/v1',
@@ -255,4 +274,155 @@ export const healthCheck = async (): Promise<ApiResponse<{ status: string; times
       error: error instanceof Error ? error.message : 'LLM服务检查失败'
     };
   }
+};
+
+/**
+ * 流式LLM调用服务
+ * @param request 包含回调函数的流式请求参数
+ * @param apiConfig 可选的API配置
+ * @returns Promise<string> - 返回请求ID用于取消请求
+ */
+export const callLLMStream = async (
+  request: LLMStreamRequest,
+  apiConfig?: typeof DEFAULT_API_CONFIG
+): Promise<string> => {
+  const requestId = requestManager.generateRequestId();
+  const controller = requestManager.createCancellableRequest(requestId);
+  const sessionId = request.sessionId || requestId;
+
+  // 异步处理流式请求
+  requestManager.addRequest(async () => {
+    try {
+      const requestBody = {
+        model: request.model || (apiConfig || DEFAULT_API_CONFIG).model,
+        messages: [
+          {
+            role: 'system',
+            content: request.systemPrompt
+          },
+          {
+            role: 'user',
+            content: request.userQuery
+          }
+        ],
+        temperature: request.temperature || 0.7,
+        max_tokens: request.maxTokens || 5120,
+        stream: true,
+        enable_thinking: false
+      };
+
+      const response = await fetch(`${(apiConfig || DEFAULT_API_CONFIG).baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(apiConfig || DEFAULT_API_CONFIG).apiKey}`
+        },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`API调用失败: ${response.status} - ${errorData.error?.message || response.statusText}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('无法获取响应流');
+      }
+
+      const decoder = new TextDecoder();
+      let fullContent = '';
+      let totalUsage = { promptTokens: 0, completionTokens: 0, totalTokens: 0 };
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+
+              if (data === '[DONE]') {
+                // 流式响应结束
+                const finalResponse: LLMResponse = {
+                  content: fullContent,
+                  usage: totalUsage,
+                  sessionId,
+                  requestId
+                };
+                request.onComplete?.(finalResponse);
+                return finalResponse;
+              }
+
+              try {
+                const parsed = JSON.parse(data);
+
+                if (parsed.choices && parsed.choices[0]) {
+                  const delta = parsed.choices[0].delta;
+                  const finishReason = parsed.choices[0].finish_reason;
+
+                  if (delta.content) {
+                    fullContent += delta.content;
+
+                    const streamChunk: LLMStreamChunk = {
+                      content: delta.content,
+                      finished: finishReason !== null,
+                      sessionId,
+                      requestId
+                    };
+
+                    request.onChunk?.(streamChunk);
+                  }
+
+                  if (finishReason && parsed.usage) {
+                    totalUsage = {
+                      promptTokens: parsed.usage.prompt_tokens || 0,
+                      completionTokens: parsed.usage.completion_tokens || 0,
+                      totalTokens: parsed.usage.total_tokens || 0
+                    };
+                  }
+                }
+              } catch (parseError) {
+                // 忽略解析错误，继续处理下一行
+                console.warn('解析流式响应时出错:', parseError);
+              }
+            }
+          }
+        }
+
+        // 如果没有正常结束，构建最终响应
+        const finalResponse: LLMResponse = {
+          content: fullContent,
+          usage: totalUsage,
+          sessionId,
+          requestId
+        };
+        request.onComplete?.(finalResponse);
+        return finalResponse;
+
+      } finally {
+        reader.releaseLock();
+      }
+
+    } catch (error) {
+      console.error('流式LLM调用失败:', error);
+
+      if (error.name === 'AbortError') {
+        request.onError?.(new Error('请求已取消'));
+      } else {
+        request.onError?.(error instanceof Error ? error : new Error('流式调用失败'));
+      }
+      throw error;
+    }
+  }, requestId);
+
+  return requestId;
 };

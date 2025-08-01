@@ -1,9 +1,44 @@
-import React from 'react';
-import { Bot, User, Copy, Check, Send } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Bot, User, Copy, Check, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+
+// 流式打字动画组件
+const StreamingTypingAnimation: React.FC = () => (
+  <div className="flex items-center space-x-1">
+    <div className="flex space-x-1">
+      <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+      <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></div>
+      <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></div>
+    </div>
+    <span className="text-xs text-muted-foreground/60 ml-2">AI正在思考...</span>
+  </div>
+);
+
+// 流式内容渲染组件
+const StreamingContent: React.FC<{ content: string; isComplete: boolean }> = ({ content, isComplete }) => {
+  const [displayedContent, setDisplayedContent] = React.useState('');
+  const intervalRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (content) {
+      setDisplayedContent(content);
+    }
+  }, [content]);
+
+  return (
+    <div className="flex items-start">
+      <pre className="text-sm text-foreground whitespace-pre-wrap break-words font-sans">
+        {displayedContent}
+        {!isComplete && (
+          <span className="animate-pulse ml-0.5 text-primary">▊</span>
+        )}
+      </pre>
+    </div>
+  );
+};
 
 interface Defect {
   id: number;
@@ -13,13 +48,24 @@ interface Defect {
   impact: string;
 }
 
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
+}
+
 interface ChatAreaProps {
   currentDefect: Defect | null;
   userResponse: string;
-  messageHistory: Record<number, string[]>;
+  messageHistory: Record<number, string[]>; // 保留兼容旧版本
   messageCount: Record<number, number>;
   currentDefectIndex: number;
   copiedMessage: string | null;
+  // 新增流式支持相关props
+  chatMessages: Message[]; // 完整的对话消息列表
+  isStreaming: boolean; // 是否正在流式接收
+  streamingContent: string; // 当前流式接收的内容
   onUserResponseChange: (value: string) => void;
   onUserReply: () => void;
   onCopyText: (text: string) => void;
@@ -32,6 +78,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   messageCount,
   currentDefectIndex,
   copiedMessage,
+  chatMessages,
+  isStreaming,
+  streamingContent,
   onUserResponseChange,
   onUserReply,
   onCopyText,
@@ -77,9 +126,91 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
         <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted/30 scrollbar-track-transparent hover:scrollbar-thumb-muted/50 space-y-4 p-4 min-h-0 max-h-[calc(100vh-240px)]">
 
+          {/* 完整对话消息 */}
+          {chatMessages.map((message) => (
+            <div key={message.id} className={cn(
+              "flex gap-3",
+              message.role === 'user' ? "justify-end" : "justify-start"
+            )}>
+              {/* AI头像（左侧） */}
+              {message.role === 'assistant' && (
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <Bot size={18} className="text-white" />
+                </div>
+              )}
 
-          {/* 用户历史消息 */}
-          {currentMessages.map((message, index) => (
+              <div className={cn(
+                "flex-1 max-w-md group relative",
+                message.role === 'user' ? "max-w-md" : "max-w-2xl"
+              )}>
+                <div className={cn(
+                  "rounded-lg p-3",
+                  message.role === 'user'
+                    ? "bg-primary/10"
+                    : "bg-muted/50 border border-border/30"
+                )}>
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <pre className={cn(
+                        "text-sm whitespace-pre-wrap break-words font-sans",
+                        message.role === 'user' ? "text-primary" : "text-foreground"
+                      )}>
+                        {message.content}
+                      </pre>
+                    </div>
+                  </div>
+
+                  {/* 时间戳 */}
+                  <div className="text-xs text-muted-foreground/60 mt-2">
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </div>
+                </div>
+
+                {/* 复制按钮 - hover时显示 */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 h-6 w-6 p-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  onClick={() => onCopyText(message.content)}
+                >
+                  {copiedMessage === message.content ? (
+                    <Check className="h-3 w-3 text-green-500" />
+                  ) : (
+                    <Copy className="h-3 w-3 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
+
+              {/* 用户头像（右侧） */}
+              {message.role === 'user' && (
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                  <User size={18} />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* 正在流式接收的AI消息 */}
+          {isStreaming && (
+            <div className="flex gap-3 justify-start">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <Loader2 size={18} className="text-white animate-spin" />
+              </div>
+
+              <div className="flex-1 max-w-2xl">
+                <div className="bg-muted/50 border border-border/30 rounded-lg p-3">
+                  {streamingContent ? (
+                    <StreamingContent content={streamingContent} isComplete={false} />
+                  ) : (
+                    <StreamingTypingAnimation />
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 备用：兼容旧版本的用户历史消息（如果没有chatMessages） */}
+          {(!chatMessages || chatMessages.length === 0) && currentMessages.map((message, index) => (
             <div key={index} className="flex gap-3 justify-end">
               <div className="flex-1 max-w-md group relative">
                 <div className="bg-primary/10 rounded-lg p-3">
@@ -109,7 +240,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
           ))}
 
           {/* 当前用户输入消息预览 (如果有) */}
-          {userResponse && (
+          {userResponse && !isStreaming && (
             <div className="flex gap-3 justify-end">
               <div className="flex-1 max-w-md group relative">
                 <div className="bg-primary/10 rounded-lg p-3 border border-primary/20">

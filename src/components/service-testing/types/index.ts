@@ -9,7 +9,7 @@ export type ServiceHealthStatus = 'unknown' | 'healthy' | 'error';
 export type EvaluationMode = 'gentle' | 'mean';
 
 export interface ServiceTestingState {
-  activeServiceType: 'llm' | 'custom' | 'pdf';
+  activeServiceType: 'llm' | 'custom' | 'pdf' | 'crucible';
   evaluationMode: EvaluationMode;
   llmServiceHealth: ServiceHealthStatus;
   activeRequestsCount: number;

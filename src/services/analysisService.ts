@@ -25,6 +25,7 @@ export interface ResumeAnalysisResult {
     original: string;
     suggestion: string;
   }>;
+  sessionId?: string; // 新增sessionId字段
 }
 
 // 问题列表数据字典 - 用于后续LLM服务节点
@@ -174,6 +175,9 @@ export const analyzeResumeWithLLM = async (
     // 将问题列表存储到数据字典中，使用分析会话ID作为键
     const sessionId = llmResponse.data!.sessionId;
     IssuesRegistry.set(sessionId, analysisResult.issues);
+
+    // 添加sessionId到分析结果中
+    analysisResult.sessionId = sessionId;
 
     return {
       success: true,

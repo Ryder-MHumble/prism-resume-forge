@@ -15,6 +15,12 @@ export const SERVICE_TYPES = [
     color: 'text-purple-500'
   },
   {
+    type: 'crucible' as const,
+    label: '能力炼金室',
+    desc: '针对问题的对话式优化',
+    color: 'text-orange-500'
+  },
+  {
     type: 'pdf' as const,
     label: 'PDF文本提取',
     desc: '从PDF文件提取文本',
