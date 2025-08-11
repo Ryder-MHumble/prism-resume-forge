@@ -3,13 +3,24 @@ export interface ExtractedFile {
   extractedText: string;
   status: 'extracting' | 'success' | 'error';
   error?: string;
+  extractionMethod?: 'pdfjs' | 'react-pdftotext' | 'tesseract';
+  fileType?: 'pdf' | 'image';
+}
+
+export interface ImageExtractionResult {
+  file: File;
+  extractedText: string;
+  status: 'extracting' | 'success' | 'error';
+  error?: string;
+  confidence?: number;
+  processingTime?: number;
 }
 
 export type ServiceHealthStatus = 'unknown' | 'healthy' | 'error';
 export type EvaluationMode = 'gentle' | 'mean';
 
 export interface ServiceTestingState {
-  activeServiceType: 'llm' | 'custom' | 'pdf' | 'crucible';
+  activeServiceType: 'llm' | 'custom' | 'pdf' | 'image' | 'crucible';
   evaluationMode: EvaluationMode;
   llmServiceHealth: ServiceHealthStatus;
   activeRequestsCount: number;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { EvaluationMode, ExtractedFile } from './types';
+import { EvaluationMode, ExtractedFile, ImageExtractionResult } from './types';
 
-type TestServiceType = 'llm' | 'custom' | 'pdf' | 'crucible';
+type TestServiceType = 'llm' | 'custom' | 'pdf' | 'image' | 'crucible';
 import { useServiceHealth } from './hooks/useServiceHealth';
 import { usePDFExtraction } from './hooks/usePDFExtraction';
 import { useLLMTesting } from './hooks/useLLMTesting';
@@ -12,7 +12,7 @@ import { downloadTextFile } from './utils/fileUtils';
 import { Header } from './components/Header';
 import { ServiceSelector } from './components/ServiceSelector';
 import { TestResultsPanel } from './components/TestResultsPanel';
-import { PDFUploadArea } from './components/PDFUploadArea';
+import { FileUploadArea } from './components/PDFUploadArea';
 import { CrucibleTestPanel } from './components/CrucibleTestPanel';
 
 export const ServiceTestingDashboard = () => {
@@ -31,16 +31,24 @@ export const ServiceTestingDashboard = () => {
     updateActiveRequestsCount
   } = useServiceHealth();
 
-  // PDF提取功能
+  // 文件提取功能
   const {
     extractedFiles,
+    imageResults,
     isDragOver,
     fileInputRef,
+    extractionMethod,
+    enableTextOptimization,
+    conservativeMode,
     handleDragOver,
     handleDragLeave,
     handleDrop,
     handleFileSelect,
-    removeFile
+    removeFile,
+    clearAllResults,
+    setExtractionMethod,
+    setEnableTextOptimization,
+    setConservativeMode
   } = usePDFExtraction();
 
   // LLM测试功能
@@ -84,6 +92,17 @@ export const ServiceTestingDashboard = () => {
     downloadTextFile(text, filename);
   };
 
+  // 处理服务类型切换
+  const handleServiceTypeChange = (type: TestServiceType) => {
+    setActiveServiceType(type);
+    // 根据服务类型自动设置提取方法
+    if (type === 'image') {
+      setExtractionMethod('tesseract');
+    } else if (type === 'pdf') {
+      setExtractionMethod('pdfjs');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
       {/* 页面标题栏 */}
@@ -104,23 +123,31 @@ export const ServiceTestingDashboard = () => {
               customPrompt={customPrompt}
               customContent={customContent}
               llmTestResultsCount={llmTestResults.length}
-              onServiceTypeChange={setActiveServiceType}
+              onServiceTypeChange={handleServiceTypeChange}
               onEvaluationModeChange={setEvaluationMode}
               onCustomPromptChange={setCustomPrompt}
               onCustomContentChange={setCustomContent}
+              onTestResumeAnalysis={() => testResumeAnalysis(evaluationMode)}
+              onTestCustomAnalysis={() => testCustomAnalysis(customPrompt, customContent)}
               onClearTestResults={clearTestResults}
             />
 
-            {/* PDF上传区域 */}
-            {activeServiceType === 'pdf' && (
+            {/* 文件上传区域 */}
+            {(activeServiceType === 'pdf' || activeServiceType === 'image') && (
               <div className="w-80 p-4">
-                <PDFUploadArea
+                <FileUploadArea
                   isDragOver={isDragOver}
                   fileInputRef={fileInputRef}
+                  extractionMethod={extractionMethod}
+                  enableTextOptimization={enableTextOptimization}
+                  conservativeMode={conservativeMode}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onFileSelect={handleFileSelect}
+                  onExtractionMethodChange={setExtractionMethod}
+                  onTextOptimizationChange={setEnableTextOptimization}
+                  onConservativeModeChange={setConservativeMode}
                 />
               </div>
             )}
@@ -150,6 +177,7 @@ export const ServiceTestingDashboard = () => {
               activeServiceType={activeServiceType}
               llmTestResults={llmTestResults}
               extractedFiles={extractedFiles}
+              imageResults={imageResults}
               expandedResultId={expandedResultId}
               expandedSections={expandedSections}
               copiedText={copiedText}

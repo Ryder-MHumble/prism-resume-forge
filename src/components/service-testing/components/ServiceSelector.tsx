@@ -1,9 +1,9 @@
-import { Settings, Brain, FileText, Play, Trash2, MessageCircle } from 'lucide-react';
+import { Settings, Brain, FileText, Play, Trash2, MessageCircle, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SERVICE_TYPES, EVALUATION_MODES } from '../utils/constants';
 import { EvaluationMode } from '../types';
-type TestServiceType = 'llm' | 'custom' | 'pdf' | 'crucible';
+type TestServiceType = 'llm' | 'custom' | 'pdf' | 'image' | 'crucible';
 
 interface ServiceSelectorProps {
   activeServiceType: TestServiceType;
@@ -46,9 +46,10 @@ export const ServiceSelector = ({
           </h2>
 
           <div className="space-y-3">
-            {SERVICE_TYPES.map(({ type, label, desc, color }) => {
+            {SERVICE_TYPES.map(({ type, label, desc, color, icon }) => {
               const IconComponent = type === 'llm' ? Brain :
                                    type === 'custom' ? Settings :
+                                   type === 'image' ? Image :
                                    type === 'crucible' ? MessageCircle : FileText;
               return (
                 <button
@@ -62,7 +63,10 @@ export const ServiceSelector = ({
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <IconComponent className={cn("w-6 h-6 mt-0.5", color)} />
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{icon}</span>
+                      <IconComponent className={cn("w-5 h-5 mt-0.5", color)} />
+                    </div>
                     <div className="flex-1">
                       <div className="font-semibold text-sm mb-1">{label}</div>
                       <div className="text-xs text-muted-foreground leading-relaxed">{desc}</div>
@@ -179,6 +183,37 @@ export const ServiceSelector = ({
                 </Button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* 文件提取配置说明 */}
+        {(activeServiceType === 'pdf' || activeServiceType === 'image') && (
+          <div className="space-y-4 bg-card/30 p-4 rounded-xl border">
+            <h3 className="font-semibold text-sm text-primary flex items-center gap-2">
+              {activeServiceType === 'pdf' ? <FileText className="w-4 h-4" /> : <Image className="w-4 h-4" />}
+              {activeServiceType === 'pdf' ? 'PDF提取' : '图片OCR'} 配置
+            </h3>
+            
+            <div className="text-xs text-muted-foreground space-y-2">
+              <div className="p-3 bg-muted/30 rounded-lg">
+                <div className="font-medium mb-1">支持的文件格式：</div>
+                {activeServiceType === 'pdf' ? (
+                  <div>📄 PDF文件</div>
+                ) : (
+                  <div>🖼️ PNG, JPG, JPEG, WebP图片文件</div>
+                )}
+              </div>
+              
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
+                <div className="font-medium mb-1 text-blue-700 dark:text-blue-300">使用说明：</div>
+                <div className="text-blue-600 dark:text-blue-400">
+                  {activeServiceType === 'pdf' 
+                    ? '选择PDF文件进行文本提取，支持多种提取方法'
+                    : '上传图片文件进行OCR文字识别，自动识别中英文内容'
+                  }
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
