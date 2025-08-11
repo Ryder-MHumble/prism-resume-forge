@@ -14,11 +14,12 @@ import type { DashboardData } from '@/types';
 
 interface RadarAnalysisProps {
   data: DashboardData;
+  analysisSummary?: string;
   isExpanded: boolean;
   onToggle: (expanded: boolean) => void;
 }
 
-export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps) => {
+export const RadarAnalysis = ({ data, analysisSummary, isExpanded, onToggle }: RadarAnalysisProps) => {
   const scoreLevel = SCORE_SYSTEM.getScoreLevel(data.score);
 
   return (
@@ -89,7 +90,7 @@ export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps
 
                 {/* 智能分析总结区域 */}
                 <div className="relative p-4 rounded-lg bg-muted/30 border border-border/30">
-                  <div className="space-y-3">
+                    <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
                       <h4 className="text-sm font-semibold text-foreground">
@@ -97,7 +98,7 @@ export const RadarAnalysis = ({ data, isExpanded, onToggle }: RadarAnalysisProps
                       </h4>
                     </div>
                     <p className="text-xs text-muted-foreground/70 leading-relaxed">
-                      {ANALYSIS_SUMMARY.content}
+                      {analysisSummary && analysisSummary.trim().length > 0 ? analysisSummary : ANALYSIS_SUMMARY.content}
                     </p>
                   </div>
                 </div>

@@ -26,7 +26,7 @@ export const DASHBOARD_TEXT = {
   header: {
     title: '评价仪表盘',
     subtitle: '深度挖掘你的潜力，重塑你的简历',
-    backButton: '重新评估（剩余3次）'
+    backButton: '重新评估'
   },
   resumeSection: {
     title: '当前简历内容',

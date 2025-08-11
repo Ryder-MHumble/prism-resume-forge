@@ -12,6 +12,7 @@ import { callLLM, LLMRequest } from './llmService';
 
 // 简历分析相关类型定义
 export interface ResumeAnalysisResult {
+  summarization?: string;
   overall_score: number;
   dimension_scores: Array<{
     dimension: string;
@@ -126,13 +127,44 @@ const parseAnalysisResult = (content: string): ResumeAnalysisResult => {
     throw new Error('LLM响应内容为空');
   }
 
+  const tryParse = (text: string) => {
+    const trimmed = text.trim();
+    return JSON.parse(trimmed);
+  };
+
+  // 1) 直接解析
   try {
-    return JSON.parse(content);
-  } catch (error) {
-    console.error('解析LLM响应失败:', error);
-    console.error('响应内容:', content);
-    throw new Error(`响应格式错误: ${error instanceof Error ? error.message : '未知错误'}`);
-  }
+    return tryParse(content);
+  } catch {}
+
+  // 2) 提取 ```json ... ``` 代码块
+  try {
+    const codeBlockMatch = content.match(/```json\s*([\s\S]*?)\s*```/i) || content.match(/```\s*([\s\S]*?)\s*```/i);
+    if (codeBlockMatch && codeBlockMatch[1]) {
+      return tryParse(codeBlockMatch[1]);
+    }
+  } catch {}
+
+  // 3) 从首个花括号起，基于栈匹配寻找一个完整的 JSON 对象
+  try {
+    const startIndex = content.indexOf('{');
+    if (startIndex !== -1) {
+      let depth = 0;
+      for (let i = startIndex; i < content.length; i++) {
+        const ch = content[i];
+        if (ch === '{') depth++;
+        if (ch === '}') depth--;
+        if (depth === 0) {
+          const candidate = content.slice(startIndex, i + 1);
+          return tryParse(candidate);
+        }
+      }
+    }
+  } catch {}
+
+  console.error('解析LLM响应失败: 无法从返回文本中提取有效JSON');
+  console.error('响应内容片段:', content.slice(0, 500));
+  throw new Error('响应格式错误：无法解析为JSON');
 };
 
 /**
@@ -146,7 +178,8 @@ const simulateApiDelay = (ms: number = 2000) =>
  * 主要用于Portal页面，保持与原有状态管理逻辑的兼容性
  */
 export const analyzeResumeWithLLM = async (
-  mode: 'gentle' | 'mean' = 'mean'
+  mode: 'gentle' | 'mean' = 'mean',
+  options?: { jdText?: string }
 ): Promise<ApiResponse<ResumeAnalysisResult>> => {
   try {
     // 获取系统提示词和用户简历内容
@@ -155,10 +188,15 @@ export const analyzeResumeWithLLM = async (
       getUserContent()
     ]);
 
+    // 拼接简历与JD内容（若提供）
+    const userQueryCombined = options?.jdText
+      ? `【简历内容】\n${userContent}\n\n———\n\n【岗位JD】\n${options.jdText}`
+      : userContent;
+
     // 调用LLM进行分析
     const llmRequest: LLMRequest = {
       systemPrompt,
-      userQuery: userContent,
+      userQuery: userQueryCombined,
       temperature: 0.7,
       maxTokens: 5120
     };
@@ -384,10 +422,10 @@ export const calculateModeImpact = (mode: AnalysisMode): {
         scoreAdjustment: 0,
         description: '严格模式：最真实的评估结果'
       };
-    case 'balanced':
+    case 'supportive':
       return {
         scoreAdjustment: 5,
-        description: '平衡模式：适中的评估标准'
+        description: '支持模式：适中的评估标准'
       };
     case 'gentle':
       return {

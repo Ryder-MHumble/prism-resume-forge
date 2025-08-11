@@ -3,11 +3,13 @@ import { AnalysisMode } from '@/components/prism/AnalysisMode';
 import { useNavigate } from 'react-router-dom';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import { PortalHeader } from '@/components/portal/PortalHeader';
+import { CyberpunkBackground } from '@/components/ui/CyberpunkBackground';
 import { ControlPanel } from '@/components/portal/ControlPanel';
 import { HeroSection } from '@/components/portal/HeroSection';
 import { useAppContext } from '@/store/AppContext';
 import { HandLoader } from '@/components/common/HandLoader';
-import { analyzeResumeWithLLM } from '@/services/analysisService';
+import { extractJDTextFromImage } from '@/services/jdOcrService';
+import type { LLMAnalysisResult } from '@/types';
 
 interface PortalProps {
   onStartAnalysis: (files: { resume?: File; jd?: File }, mode: AnalysisMode) => void;
@@ -41,50 +43,42 @@ export const Portal = () => {
     if (!uploadedFiles.resume) return;
 
     try {
-      // 设置加载状态
+      // 开始全局加载，在仪表盘显示蒙版
       setLoading(true);
       setError(null);
 
-      // 调用LLM分析服务
-      const evaluationMode = analysisMode === 'hardcore' ? 'mean' : 'gentle';
-      const result = await analyzeResumeWithLLM(evaluationMode);
-
-      if (result.success && result.data) {
-        // 保存分析结果到全局状态
-        setLLMAnalysisResult(result.data);
-        // 跳转到仪表盘
-        navigate('/dashboard');
-      } else {
-        setError(result.error || '分析失败，请重试');
+      // 若存在JD图片（如PNG），先OCR提取文本并暂存，供仪表盘分析使用
+      let jdText = '';
+      const jdFile = uploadedFiles.jd;
+      if (jdFile && jdFile.type.includes('image/')) {
+        try {
+          jdText = await extractJDTextFromImage(jdFile);
+        } catch (e) {
+          console.warn('JD OCR 提取失败，将忽略JD：', e);
+        }
       }
+
+      if (jdText) sessionStorage.setItem('jdText', jdText);
+      // 清空之前的分析结果，避免旧数据闪现
+      setLLMAnalysisResult(null);
+
+      // 进入仪表盘，由仪表盘负责启动分析与关闭加载
+      navigate('/dashboard');
     } catch (error) {
-      console.error('简历分析失败:', error);
-      setError('分析失败，请重试');
-    } finally {
+      console.error('启动分析失败:', error);
+      setError('启动分析失败，请重试');
       setLoading(false);
     }
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background">
+      {/* 背景动画 */}
+      <CyberpunkBackground intensity="high" />
       {/* 简化的背景装饰 */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 opacity-50" />
       
-      {/* 加载状态覆盖层 */}
-      {state.isLoading && (
-        <div className="fixed inset-0 z-50 bg-background/80 flex items-center justify-center">
-          <HandLoader
-            size="lg"
-            showText={true}
-            customTexts={[
-              "解析您的简历",
-              "分析技能匹配度",
-              "识别优化空间",
-              "生成专业建议"
-            ]}
-          />
-        </div>
-      )}
+      {/* 首页不再显示分析加载蒙版，蒙版移动到仪表盘页面 */}
 
       {/* 主内容层 */}
       <div className="relative z-10 h-full">

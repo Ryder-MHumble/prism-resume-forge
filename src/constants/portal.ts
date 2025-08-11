@@ -27,7 +27,7 @@ export const PORTAL_TEXT = {
     resumePlaceholder: '上传你的简历',
     jdPlaceholder: '上传目标职位描述',
     resumeFormats: '支持 PDF、Word 格式 • 解析你的价值光谱',
-    jdFormats: '支持 PDF、Word、TXT、PNG • 让价值折射更精准'
+    jdFormats: '支持 PNG • 让价值折射更精准'
   },
   steps: {
     upload: {

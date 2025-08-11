@@ -20,7 +20,7 @@ export const HIGHLIGHTED_SECTIONS = {
 export const ANALYSIS_SUMMARY = {
   title: '智能分析总结',
   subtitle: '基于大模型算法的综合评估',
-  content: '简历整体结构清晰，技术栈匹配度较高，但部分项目描述缺乏具体量化的成果展示。技能部分存在过度使用"精通"等模糊词汇的情况，建议重点优化项目成果的数据化表达，增加具体的项目数据和成果指标，以提升简历的说服力和竞争优势。'
+  content: ''
 };
 
 // 能力光谱分析配置
@@ -71,7 +71,7 @@ export const PAGE_TEXT = {
   header: {
     title: '评价仪表盘',
     subtitle: '深度挖掘你的潜力，重塑你的简历',
-    backButton: '重新评估（剩余3次）'
+    backButton: '重新评估'
   },
 
   resumeSection: {

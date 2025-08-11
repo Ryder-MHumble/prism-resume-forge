@@ -271,7 +271,6 @@ export const FileUploadArea = ({
         onFileSelect={onFileSelect}
         onFileRemove={onFileRemove}
       />
-
       {/* 次要上传区域 - JD */}
       <FileUploadZone
         type="jd"

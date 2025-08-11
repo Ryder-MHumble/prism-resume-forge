@@ -49,10 +49,9 @@ export const ControlPanel = ({
   };
 
   return (
-    <div className="w-2/5 flex flex-col border-r border-primary/20 relative">
+    <div className="w-2/5 flex flex-col relative">
       {/* 面板头部区域 */}
-      <div className="relative border-b border-primary/20 bg-gradient-to-r from-background/80 to-background/70">
-
+      <div className="relative bg-gradient-to-r from-background/80 to-background/70">
         <div className="flex items-center justify-between py-5 px-8 relative z-10">
           {/* 左侧：当前阶段标题 */}
           <div className="flex items-center gap-3">
@@ -73,21 +72,9 @@ export const ControlPanel = ({
                 </div>
               </>
             )}
-
             {/* 阶段进度指示器 */}
-            <div className="ml-4 flex items-center gap-2">
-              <div className={cn(
-                "w-2 h-2 rounded-full transition-all duration-300",
-                activePanel === 'upload' ? "bg-primary animate-pulse" : "bg-primary/30"
-              )} />
-              <div className="w-8 h-px bg-gradient-to-r from-primary/50 to-secondary/50" />
-              <div className={cn(
-                "w-2 h-2 rounded-full transition-all duration-300",
-                activePanel === 'ready' ? "bg-secondary animate-pulse" : "bg-secondary/30"
-              )} />
-            </div>
+            {/* 已去除 */}
           </div>
-
           {/* 右侧：条件显示的按钮 */}
           <div className="flex items-center gap-3">
             {/* 上传阶段：下一步按钮（仅在有简历时显示） */}
@@ -101,7 +88,6 @@ export const ControlPanel = ({
                 <ArrowRight className="w-4 h-4" />
               </Button>
             )}
-
             {/* 分析配置阶段：重新上传按钮 */}
             {activePanel === 'ready' && (
               <Button
@@ -119,11 +105,7 @@ export const ControlPanel = ({
             )}
           </div>
         </div>
-
-        {/* 底部装饰线 */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
       </div>
-
       {/* 面板内容 */}
       <div className="flex-1 p-6 overflow-hidden relative">
         {/* 文件上传面板 */}
@@ -140,7 +122,6 @@ export const ControlPanel = ({
             />
           </div>
         )}
-
         {/* 启动分析面板 */}
         {activePanel === 'ready' && (
           <div className="animate-in fade-in-0 slide-in-from-right-4 duration-500 h-full">
@@ -159,7 +140,6 @@ export const ControlPanel = ({
                   </div>
                 )}
               </div>
-
               {/* 主要内容区域 */}
               <div className="flex-1 relative z-10 min-h-0">
                 <AnalysisModeSelector
@@ -167,7 +147,6 @@ export const ControlPanel = ({
                   onChange={setAnalysisMode}
                 />
               </div>
-
               {/* 右下角开始分析按钮 */}
               <div className="relative z-10 flex justify-end mt-4 pt-3 border-t border-border/20 flex-shrink-0">
                 <Button
